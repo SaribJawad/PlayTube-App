@@ -12,7 +12,7 @@ class ApiError extends Error {
     this.success = false;
     this.errors = errors;
 
-    // handling the statck trace of files error
+    // handling the stack trace of files error
     if (stack) {
       this.stack = stack;
     } else {
