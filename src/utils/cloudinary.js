@@ -1,5 +1,6 @@
 import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
+import { ApiError } from "./ApiError.js";
 
 const uploadOnCloudinary = async (localFilePath) => {
   cloudinary.config({
@@ -10,13 +11,11 @@ const uploadOnCloudinary = async (localFilePath) => {
 
   try {
     if (!localFilePath) return null;
-    // console.log("localFilePath", localFilePath);
     //upload the file on cloudinary
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
     // file has been uploaded successfully
-    // console.log("file is uploaded on Cloudinary", response.url);
     fs.unlinkSync(localFilePath);
     return response;
   } catch (error) {
@@ -25,4 +24,16 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-export { uploadOnCloudinary };
+const clearPreviousImage = async (oldFilePath) => {
+  try {
+    if (!oldFilePath) return null;
+    const result = await cloudinary.uploader.destroy(oldFilePath, {
+      resource_type: "auto",
+    });
+    console.log(result);
+  } catch (error) {
+    throw new ApiError(500, "Error deleting old avatar.");
+  }
+};
+
+export { uploadOnCloudinary, clearPreviousImage };
