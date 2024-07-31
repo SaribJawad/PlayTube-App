@@ -1,7 +1,11 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
-import { clearPreviousImage, uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/fileHandler.js";
+
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -71,8 +75,14 @@ const registerUser = asyncHandler(async (req, res) => {
   // create user object in db
   const user = await User.create({
     fullname,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    avatar: {
+      url: avatar?.url,
+      public_id: avatar?.public_id,
+    },
+    coverImage: {
+      url: coverImage?.url || "",
+      public_id: coverImage?.public_id || "",
+    },
     email,
     password,
     username: username.toLowerCase(),
@@ -218,7 +228,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
-  const user = User.findById(req.user?._id);
+  const user = await User.findById(req.user?._id);
+  console.log(user);
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
   if (!isPasswordCorrect) {
@@ -284,21 +295,30 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user?._id).select("avatar");
   const oldPublicId = user.avatar.public_id;
 
-  if (oldPublicId && updatedUser.avatar.public_id) {
-    await deleteFromCloudinary(oldPublicId);
-  }
-
-  await User.findByIdAndUpdate(
+  const updatedUser = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
-        avatar: avatar.url,
+        avatar: {
+          url: avatar.url,
+          public_id: avatar.public_id,
+        },
       },
     },
     {
       new: true,
     }
   ).select("-password");
+
+  if (oldPublicId) {
+    await deleteFromCloudinary(oldPublicId);
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, "User avatar updated successfully", updatedUser)
+    );
 });
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
@@ -314,17 +334,33 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while uploading on cover image");
   }
 
-  await User.findByIdAndUpdate(
+  // deleting previous cover
+  const user = await User.findById(req.user._id).select("coverImage");
+  const oldPublicId = user.coverImage.public_id;
+  const updatedUser = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
-        coverImage: coverImage.url,
+        coverImage: {
+          url: coverImage.url,
+          public_id: coverImage.public_id,
+        },
       },
     },
     {
       new: true,
     }
-  );
+  ).select("-password");
+
+  if (oldPublicId && updatedUser.coverImage) {
+    deleteFromCloudinary(oldPublicId);
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, "User cover image updated successfully", updatedUser)
+    );
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
