@@ -10,8 +10,56 @@ import {
 } from "../utils/fileHandler.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+  const {
+    page = 1,
+    limit = 10,
+    query,
+    sortBy = "createdAt",
+    sortType = "asc",
+    userId,
+  } = req.query;
+
+  // Ensure the page and limit are integers
+  const pageNumber = parseInt(page, 10);
+  const limitNumber = parseInt(limit, 10);
+  const sortDirection = sortType === "asc" ? 1 : -1;
+
+  // Build the filter query
+  const filter = {};
+
+  if (query) {
+    filter.title = { $regex: query, $options: "i" }; // Assuming you want to search by title, case insensitive
+  }
+  if (userId) {
+    filter.owner = userId;
+  }
+
+  if (Object.keys(filter).length === 0) {
+    throw new ApiError(400, "No filter criteria provided.");
+  }
+
+  try {
+    // Fetch the videos
+    const videos = await Video.find(filter)
+      .sort({ [sortBy]: sortDirection })
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
+
+    // Total count of videos
+    const totalVideos = await Video.countDocuments(filter);
+
+    res.status(200).json(
+      new ApiResponse(200, "Videos fetched successfully", {
+        success: true,
+        data: videos,
+        totalVideos,
+        totalPages: Math.ceil(totalVideos / limitNumber),
+        currentPage: pageNumber,
+      })
+    );
+  } catch {
+    throw new ApiError(500, "An error occurred while fetching all videos");
+  }
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
@@ -257,6 +305,41 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+
+  const video = await Video.findById(videoId);
+
+  if (!video) {
+    throw new ApiError(400, "Invalid Id");
+  }
+
+  if (video.owner.toString() != req.user?._id) {
+    throw new ApiError(
+      400,
+      "You can't toggle publish as you are not the owner of the video"
+    );
+  }
+
+  const togglePublish = await Video.findByIdAndUpdate(
+    videoId,
+    [
+      {
+        $set: {
+          isPublished: {
+            $cond: {
+              if: { $eq: ["$isPublished", true] },
+              then: false,
+              else: true,
+            },
+          },
+        },
+      },
+    ],
+    { returnOriginal: false }
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, togglePublish, "Video publish status toggled"));
 });
 
 export {
