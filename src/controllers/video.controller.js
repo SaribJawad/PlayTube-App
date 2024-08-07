@@ -28,8 +28,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
   const filter = {};
 
   if (query) {
-    filter.title = { $regex: query, $options: "i" }; // Assuming you want to search by title, case insensitive
+    filter.title = { $regex: query, $options: "i" };
   }
+
   if (userId) {
     filter.owner = userId;
   }
@@ -136,6 +137,9 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
 
+  await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } }, { new: true });
+
+  // Aggregate to get video details
   const video = await Video.aggregate([
     {
       $match: {
@@ -163,7 +167,7 @@ const getVideoById = asyncHandler(async (req, res) => {
                 $size: "$subscribers",
               },
               isSubscribed: {
-                $in: [req?.user, "$subscribers.subscriber"],
+                $in: [req?.user?._id, "$subscribers.subscriber"],
               },
             },
           },
@@ -178,6 +182,10 @@ const getVideoById = asyncHandler(async (req, res) => {
       },
     },
   ]);
+
+  if (video.length === 0) {
+    throw new ApiError(500, "Invalid video ID");
+  }
 
   return res
     .status(200)
