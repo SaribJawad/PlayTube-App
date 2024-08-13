@@ -1,7 +1,26 @@
 import React from "react";
 import SubmitButton from "../components/SubmitButton";
+import FormInput from "../components/FormInput";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+interface LoginFormInputs {
+  email: string;
+  password: string;
+}
 
 const LoginPage: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormInputs>();
+
+  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+    console.log(data);
+  };
+
+  console.log(errors);
+
   return (
     <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">
       <h1 className="text-center text-[40px] font-bold font-Montserrat">
@@ -10,42 +29,39 @@ const LoginPage: React.FC = () => {
       <p className="font-Montserrat text-zinc-300">
         Log In and Let’s Get Started!
       </p>
-      <div className="mt-20  min-w-[360px] flex justify-center  flex-col">
+      <div className=" mt-20  min-w-[360px] flex justify-center  flex-col ">
         <form
+          onSubmit={handleSubmit(onSubmit)}
           action="api/v1/users/login"
-          className="flex items-center  flex-col"
+          className="flex items-center  flex-col gap-8"
         >
-          <div className="w-full">
-            <label className="text-[17px] font-normal" htmlFor="email">
-              Email:
-            </label>
-            <br />
-            <input
-              className="text-black text-[17px] w-[100%] mb-8 p-3 mt-2 rounded-lg outline-none input-field"
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-          <div className="w-full">
-            <label className="text-[17px] font-normal" htmlFor="password">
-              Password:
-            </label>
-            <br />
-            <input
-              className="text-black text-[17px] w-[100%]  p-3 mt-2 rounded-lg outline-none input-field"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
+          <FormInput
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            errors={errors.email?.message}
+            register={register}
+          />
+          <FormInput
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            type="password"
+            errors={errors.password?.message}
+            register={register}
+          />
           <SubmitButton label="Login" />
         </form>
       </div>
+      <h3 className="mt-8">
+        Dont have an account?{" "}
+        <a
+          className="underline hover:font-semibold transition-all duration-300 ease-in-out"
+          href="/auth/signup"
+        >
+          Sign up now
+        </a>
+      </h3>
     </div>
   );
 };

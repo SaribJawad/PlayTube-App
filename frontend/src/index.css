@@ -4,12 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.input-field {
-  transition: all 0.3s ease; /* Smooth transition for all properties */
+body {
+  font-family: "Inter", sans-serif;
 }
 
-.input-field:hover,
-.input-field:focus {
-  border-radius: 0; /* Example change for animation */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+.button-animation {
+  transition: all 0.3s ease;
+}
+
+.button-animation:focus {
+  transform: scale(0.8);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

@@ -8,7 +8,7 @@ interface SubmitButtonProps {
 const SubmitButton: React.FC<SubmitButtonProps> = ({ label, onClick }) => {
   return (
     <button
-      className="px-8 py-[10px] mt-20  rounded-lg bg-red-800"
+      className="button-animation px-8 py-[10px] mt-10   bg-red-800"
       type="submit"
       onClick={onClick}
     >
