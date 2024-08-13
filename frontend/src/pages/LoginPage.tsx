@@ -2,6 +2,8 @@ import React from "react";
 import SubmitButton from "../components/SubmitButton";
 import FormInput from "../components/FormInput";
 import { SubmitHandler, useForm } from "react-hook-form";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface LoginFormInputs {
   email: string;
@@ -9,11 +11,17 @@ interface LoginFormInputs {
 }
 
 const LoginPage: React.FC = () => {
+  // validation schema with yup
+  const validationSchema = Yup.object({
+    email: Yup.string().required("Email is required").email("Email is invalid"),
+    password: Yup.string().required("Password is required"),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
+  } = useForm<LoginFormInputs>({ resolver: yupResolver(validationSchema) });
 
   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
     console.log(data);
@@ -56,7 +64,7 @@ const LoginPage: React.FC = () => {
       <h3 className="mt-8">
         Dont have an account?{" "}
         <a
-          className="underline hover:font-semibold transition-all duration-300 ease-in-out"
+          className="underline hover:font-semibold transition-all duration-200 ease-in-out"
           href="/auth/signup"
         >
           Sign up now

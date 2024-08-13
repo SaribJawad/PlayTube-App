@@ -49,7 +49,12 @@ const SignUpPage: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<SignUpFormInputs> = (data) => {
-    console.log(data);
+    const transformedData = {
+      ...data,
+      avatar: data.avatar[0],
+    };
+
+    console.log(transformedData);
   };
 
   return (
@@ -112,7 +117,7 @@ const SignUpPage: React.FC = () => {
       <h3 className="mt-8">
         Already have an account?{" "}
         <a
-          className="underline hover:font-semibold transition-all duration-300 ease-in-out"
+          className="underline hover:font-semibold transition-all duration-200 ease-in-out"
           href="/auth"
         >
           Sign in now
