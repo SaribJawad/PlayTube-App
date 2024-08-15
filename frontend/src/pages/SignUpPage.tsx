@@ -16,7 +16,7 @@ interface SignUpFormInputs {
 
 const SignUpPage: React.FC = () => {
   // validation schema with yup
-  const validationSchema = Yup.object({
+  const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string()
       .required("Password is required")
@@ -28,15 +28,15 @@ const SignUpPage: React.FC = () => {
       .matches(/^\S+$/, "No spaces allowed"),
     avatar: Yup.mixed<FileList>()
       .required("Avatar is required")
+      .test("fileType", "Upload a JPEG or PNG file", (value) => {
+        if (!value || value.length === 0) return false;
+        const file = value[0];
+        return ["image/jpeg", "image/png"].includes(file.type);
+      })
       .test("fileSize", "File must be less than 2MB", (value) => {
         if (!value || value.length === 0) return false;
         const file = value[0];
         return file.size <= 2 * 1024 * 1024;
-      })
-      .test("fileType", "Unsupported file format", (value) => {
-        if (!value || value.length === 0) return false;
-        const file = value[0];
-        return ["image/jpeg", "image/png"].includes(file.type);
       }),
   });
 
@@ -51,11 +51,12 @@ const SignUpPage: React.FC = () => {
   const onSubmit: SubmitHandler<SignUpFormInputs> = (data) => {
     const transformedData = {
       ...data,
-      avatar: data.avatar[0],
     };
 
     console.log(transformedData);
   };
+
+  console.log(errors);
 
   return (
     <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">

@@ -9,10 +9,11 @@ body {
 }
 
 .button-animation {
+  transform: scale(1);
   transition: all 0.3s ease;
 }
 
-.button-animation:focus {
-  transform: scale(0.8);
+.button-animation:active {
+  transform: scale(0.9);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

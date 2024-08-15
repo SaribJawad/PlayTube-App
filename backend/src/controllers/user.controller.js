@@ -126,7 +126,7 @@ const loginUser = asyncHandler(async (req, res) => {
   );
 
   const loggedInUser = await User.findById(user._id).select(
-    "-password -refreshTokken"
+    "-password -refreshToken"
   );
 
   const options = {
@@ -143,8 +143,6 @@ const loginUser = asyncHandler(async (req, res) => {
         200,
         {
           user: loggedInUser,
-          accessToken,
-          refreshToken,
         },
         "User Logged In Successfully"
       )

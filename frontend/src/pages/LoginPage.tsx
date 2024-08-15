@@ -27,8 +27,6 @@ const LoginPage: React.FC = () => {
     console.log(data);
   };
 
-  console.log(errors);
-
   return (
     <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">
       <h1 className="text-center text-[40px] font-bold font-Montserrat">

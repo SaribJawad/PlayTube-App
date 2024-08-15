@@ -35,12 +35,12 @@ const UploadFileInput: React.FC<UploadFileInputProps> = ({
           <RxAvatar size={30} />
           {label}
         </span>
-        <input id={id} type="file" className="hidden" {...register(name)} />
         {errors && (
           <p className="absolute  ml-[-9px] text-red-500 text-sm mt-3 ">
             {errors}
           </p>
         )}
+        <input id={id} type="file" className="hidden" {...register(name)} />
       </label>
     </>
   );
