@@ -4,6 +4,10 @@ import FormInput from "../components/FormInput";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useLogin from "../customHooks/useLogin";
+import { useAppSelector } from "../app/hooks";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { Link } from "react-router-dom";
 
 interface LoginFormInputs {
   email: string;
@@ -11,6 +15,10 @@ interface LoginFormInputs {
 }
 
 const LoginPage: React.FC = () => {
+  const auth = useAppSelector((state) => state.auth);
+  const { mutateAsync: login, error } = useLogin();
+  // mutation error
+  console.log(error, "mutation erorr");
   // validation schema with yup
   const validationSchema = Yup.object({
     email: Yup.string().required("Email is required").email("Email is invalid"),
@@ -23,9 +31,17 @@ const LoginPage: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>({ resolver: yupResolver(validationSchema) });
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    await login(data);
   };
+
+  if (auth.loading) {
+    return (
+      <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">
@@ -61,12 +77,12 @@ const LoginPage: React.FC = () => {
       </div>
       <h3 className="mt-8">
         Dont have an account?{" "}
-        <a
+        <Link
           className="underline hover:font-semibold transition-all duration-200 ease-in-out"
-          href="/auth/signup"
+          to="/auth/signup"
         >
           Sign up now
-        </a>
+        </Link>
       </h3>
     </div>
   );

@@ -25,7 +25,9 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuthenticated: false,
+  isAuthenticated: JSON.parse(
+    localStorage.getItem("isAuthenticated") || "false"
+  ),
   user: null,
   loading: false,
   error: null,
@@ -35,34 +37,40 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginRequest(state) {
+    loginRequest: (state) => {
       state.loading = true;
     },
-    loginSuccess(state, action: PayloadAction<{ user: User }>) {
-      state.user = action.payload.user;
+    loginSuccess: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
       state.loading = false;
       state.error = null;
+      localStorage.setItem("isAuthenticated", "true");
     },
-    loginFailure(state, action: PayloadAction<string>) {
+    loginFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
       state.loading = false;
     },
-    signupRequest(state) {
+    signupRequest: (state) => {
       state.loading = true;
     },
-    signupSuccess(state, action: PayloadAction<{ user: User }>) {
+    signupSuccess: (state, action: PayloadAction<User>) => {
+      state.isAuthenticated = true;
       state.loading = false;
+      state.user = action.payload;
       state.error = null;
-      state.user = action.payload.user;
+
+      localStorage.setItem("isAuthenticated", "true");
     },
-    signupFailure(state, action: PayloadAction<string>) {
+    signupFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
-    logout(state) {
+    logout: (state) => {
       state.loading = false;
       state.user = null;
       state.error = null;
+      localStorage.removeItem("isAuthenticated");
     },
   },
 });

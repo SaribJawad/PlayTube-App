@@ -36,6 +36,7 @@ import tweetRouter from "./routes/tweet.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 import playlistRouter from "./routes/playlist.routes.js";
 import dashboardRouter from "./routes/dashboard.routes.js";
+import { ApiError } from "./utils/ApiError.js";
 
 //routes declaration
 app.use("/api/v1/users", userRouter);
@@ -46,5 +47,22 @@ app.use("/api/v1/tweets", tweetRouter);
 app.use("/api/v1/subscription", subscriptionRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/playlist", playlistRouter);
+
+app.use((err, req, res, next) => {
+  if (err instanceof ApiError) {
+    // Send a JSON response with the error details
+    return res.status(err.statusCode).json({
+      success: err.success,
+      message: err.message,
+      errors: err.errors,
+    });
+  }
+
+  // For other errors, send a generic 500 response
+  // res.status(500).json({
+  //   success: false,
+  //   message: "An unexpected error occurred.",
+  // });
+});
 
 export { app };

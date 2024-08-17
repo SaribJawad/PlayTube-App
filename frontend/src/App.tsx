@@ -6,14 +6,22 @@ import Dashboard from "./pages/DashboardPage";
 import AuthLayout from "./layouts/AuthLayout";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import ProtectedRoute from "./ui/ProtectedRoute";
+import PublicRoute from "./ui/PublicRoute";
 
 const App: React.FC = () => (
   <Routes>
-    <Route path="/" element={<MainLayout />}>
+    <Route
+      path="/"
+      element={<ProtectedRoute component={MainLayout} path="/" />}
+    >
       <Route index element={<HomePage />} />
       <Route path="dashboard" element={<Dashboard />} />
     </Route>
-    <Route path="/auth" element={<AuthLayout />}>
+    <Route
+      path="/auth"
+      element={<PublicRoute component={AuthLayout} path="/auth" />}
+    >
       <Route index element={<LoginPage />} />
       <Route path="signup" element={<SignUpPage />} />
     </Route>
