@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SubmitButton from "../components/SubmitButton";
 import FormInput from "../components/FormInput";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -8,6 +8,8 @@ import useLogin from "../customHooks/useLogin";
 import { useAppSelector } from "../app/hooks";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Link } from "react-router-dom";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface LoginFormInputs {
   email: string;
@@ -17,8 +19,17 @@ interface LoginFormInputs {
 const LoginPage: React.FC = () => {
   const auth = useAppSelector((state) => state.auth);
   const { mutateAsync: login, error } = useLogin();
-  // mutation error
-  console.log(error, "mutation erorr");
+
+  // show toast notification on error
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message, {
+        closeButton: false,
+      });
+    }
+  }, [error]);
+
   // validation schema with yup
   const validationSchema = Yup.object({
     email: Yup.string().required("Email is required").email("Email is invalid"),
@@ -45,6 +56,11 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        transition={Flip}
+      />
       <h1 className="text-center text-[40px] font-bold font-Montserrat">
         Play<span className="text-red-700">Tube</span>
       </h1>

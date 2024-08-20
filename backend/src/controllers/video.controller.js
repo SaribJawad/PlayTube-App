@@ -16,7 +16,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
     query,
     sortBy = "createdAt",
     sortType = "asc",
-    userId,
   } = req.query;
 
   // Ensure the page and limit are integers
@@ -29,10 +28,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
   if (query) {
     filter.title = { $regex: query, $options: "i" };
-  }
-
-  if (userId) {
-    filter.owner = userId;
   }
 
   if (Object.keys(filter).length === 0) {

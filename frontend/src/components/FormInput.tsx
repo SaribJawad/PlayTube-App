@@ -47,7 +47,7 @@ const FormInput: React.FC<FormInputProps> = ({
       )}
 
       <input
-        className={`text-black text-[16px] w-[100%] p-3 outline-none ${
+        className={` text-black text-[16px] w-[100%] p-3 outline-none ${
           errors ? "border-red-500 border-2" : ""
         }`}
         type={type ? type : "text"}

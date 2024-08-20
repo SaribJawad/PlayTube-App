@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import FormInput from "../components/FormInput";
 import SubmitButton from "../components/SubmitButton";
 import UploadFileInput from "../components/UploadFileInput";
@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import useSignup from "../customHooks/useSignup";
 import { useAppSelector } from "../app/hooks";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface SignUpFormInputs {
   email: string;
@@ -21,6 +23,15 @@ interface SignUpFormInputs {
 const SignUpPage: React.FC = () => {
   const auth = useAppSelector((state) => state.auth);
   const { mutateAsync: signup, error } = useSignup();
+
+  // show toast notification on error
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message, {
+        closeButton: false,
+      });
+    }
+  }, [error]);
 
   // validation schema with yup
   const validationSchema = Yup.object().shape({
@@ -69,6 +80,11 @@ const SignUpPage: React.FC = () => {
 
   return (
     <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        transition={Flip}
+      />
       <h1 className="text-center text-[40px] font-bold font-Montserrat">
         Play<span className="text-red-700">Tube</span>
       </h1>

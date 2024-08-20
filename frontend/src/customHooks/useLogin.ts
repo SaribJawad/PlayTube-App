@@ -70,7 +70,7 @@ const useLogin = () => {
       } catch (error) {
         if (error instanceof Error) {
           dispatch(loginFailure(error.message));
-          throw error.message;
+          throw error;
         } else {
           dispatch(loginFailure("Error while logging in the user"));
           throw "Error while logging in the user";

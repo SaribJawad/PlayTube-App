@@ -1,5 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 interface MainLayoutProps {
   children?: React.ReactNode;
@@ -7,10 +9,10 @@ interface MainLayoutProps {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <div>
-      <header className="h-6 bg-black">Header</header>
+    <div className="bg-black h-screen">
+      <Navbar />
       <Outlet />
-      <footer>Footer</footer>
+      <Footer />
     </div>
   );
 };
