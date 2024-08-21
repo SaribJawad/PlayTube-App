@@ -12,7 +12,7 @@ interface SliderProps {
 const Slider: React.FC<SliderProps> = ({ isOpen, toggleMenu }) => {
   return (
     <div
-      className={`sm:hidden py-6 px-5  bg-black flex items-end justify-start gap-10 flex-col  fixed border-zinc-800 border-l  h-[100%] w-[300px] top-0 right-0 transition-transform ${
+      className={`sm:hidden py-6 px-5  bg-black z-10 flex items-end justify-start gap-10 flex-col  fixed border-zinc-800 border-l  h-[100%] w-[300px] top-0 right-0 transition-transform ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }  `}
     >

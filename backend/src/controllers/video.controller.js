@@ -16,6 +16,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     query,
     sortBy = "createdAt",
     sortType = "asc",
+    userId,
   } = req.query;
 
   // Ensure the page and limit are integers
@@ -24,24 +25,69 @@ const getAllVideos = asyncHandler(async (req, res) => {
   const sortDirection = sortType === "asc" ? 1 : -1;
 
   // Build the filter query
-  const filter = {};
+  const filter = [];
 
   if (query) {
-    filter.title = { $regex: query, $options: "i" };
+    filter.push({
+      $match: {
+        title: { $regex: query, $options: "i" },
+      },
+    });
   }
 
-  if (Object.keys(filter).length === 0) {
-    throw new ApiError(400, "No filter criteria provided.");
+  if (userId) {
+    filter.push({
+      $match: {
+        owner: mongoose.Types.ObjectId(userId),
+      },
+    });
   }
+
+  const pipeline = [
+    ...filter,
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+      },
+    },
+    {
+      $unwind: "$owner",
+    },
+    {
+      $sort: {
+        [sortBy]: sortDirection,
+      },
+    },
+    {
+      $skip: (pageNumber - 1) * limitNumber,
+    },
+    {
+      $limit: limitNumber,
+    },
+    {
+      $project: {
+        _id: 1,
+        thumbnail: 1,
+        title: 1,
+        duration: 1,
+        views: 1,
+        owner: {
+          _id: 1,
+          username: 1,
+          avatar: 1,
+        },
+        createdAt: 1,
+      },
+    },
+  ];
 
   try {
     // Fetch the videos
-    const videos = await Video.find(filter)
-      .sort({ [sortBy]: sortDirection })
-      .skip((pageNumber - 1) * limitNumber)
-      .limit(limitNumber);
+    const videos = await Video.aggregate(pipeline);
 
-    // Total count of videos
     const totalVideos = await Video.countDocuments(filter);
 
     res.status(200).json(

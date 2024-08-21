@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Slider from "./Slider";
+import { Link } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -33,12 +34,15 @@ const Navbar: React.FC = () => {
         </button>
       </div>
 
+      {/* profile icon */}
       <div>
-        <img
-          className=" hidden sm:block max-w-12 rounded-full mx-3 "
-          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png  "
-          alt="Profile"
-        />
+        <Link to={""}>
+          <img
+            className=" hidden sm:block max-w-12 rounded-full mx-3 "
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png  "
+            alt="Profile"
+          />
+        </Link>
       </div>
 
       {/* Hamburger */}
