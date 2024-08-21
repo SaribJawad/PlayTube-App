@@ -51,6 +51,23 @@ const getAllVideos = asyncHandler(async (req, res) => {
         localField: "owner",
         foreignField: "_id",
         as: "owner",
+        pipeline: [
+          {
+            $lookup: {
+              from: "subscriptions",
+              localField: "_id",
+              foreignField: "channel",
+              as: "subscribers",
+            },
+          },
+          {
+            $addFields: {
+              subscribersCount: {
+                $size: "$subscribers",
+              },
+            },
+          },
+        ],
       },
     },
     {
@@ -78,6 +95,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
           _id: 1,
           username: 1,
           avatar: 1,
+          subscribersCount: 1,
         },
         createdAt: 1,
       },
@@ -91,13 +109,17 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const totalVideos = await Video.countDocuments(filter);
 
     res.status(200).json(
-      new ApiResponse(200, "Videos fetched successfully", {
-        success: true,
-        data: videos,
-        totalVideos,
-        totalPages: Math.ceil(totalVideos / limitNumber),
-        currentPage: pageNumber,
-      })
+      new ApiResponse(
+        200,
+        // {
+        //   success: true,
+        videos,
+        // totalVideos,
+        //   totalPages: Math.ceil(totalVideos / limitNumber),
+        //   currentPage: pageNumber,
+        // },
+        "Videos fetched successfully"
+      )
     );
   } catch {
     throw new ApiError(500, "An error occurred while fetching all videos");
