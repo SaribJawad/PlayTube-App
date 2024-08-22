@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import PublicRoute from "./ui/PublicRoute";
+import SearchResultPage from "./pages/SearchResultPage";
 
 const App: React.FC = () => (
   <Routes>
@@ -16,6 +17,7 @@ const App: React.FC = () => (
       element={<ProtectedRoute component={MainLayout} path="/" />}
     >
       <Route index element={<HomePage />} />
+      <Route path="searchResult" element={<SearchResultPage />} />
       <Route path="dashboard" element={<Dashboard />} />
     </Route>
     <Route

@@ -6,7 +6,11 @@ export default {
       Inter: ["Inter", "sans-serif"],
       Montserrat: ["Montserrat", "sans-serif"],
     },
-    extend: {},
+    extend: {
+      screens: {
+        custom: "702px",
+      },
+    },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };
