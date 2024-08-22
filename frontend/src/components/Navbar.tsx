@@ -1,15 +1,33 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Slider from "./Slider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useGetSearchVideos from "../customHooks/useGetSearchVideos";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [shoudlFetch, setShouldFetch] = useState<boolean>(false);
+
+  const { refetch } = useGetSearchVideos(searchQuery, shoudlFetch);
+  const navigate = useNavigate();
 
   function toggleMenu(): void {
     setIsOpen((prev) => !prev);
+  }
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setShouldFetch(true);
+      refetch();
+
+      setSearchQuery("");
+      setShouldFetch(false);
+      navigate("/searchResult");
+    }
   }
 
   return (
@@ -18,7 +36,8 @@ const Navbar: React.FC = () => {
         Play<span className="text-red-700">Tube</span>
       </h1>
 
-      <div
+      <form
+        onSubmit={(e) => handleSubmit(e)}
         className={`w-full top-20 left-0 fixed sm:static  md:w-[600px]  items-center sm:flex  sm:opacity-100 ${
           openSearch ? "opacity-100 block" : "opacity-0 hidden"
         } `}
@@ -26,13 +45,15 @@ const Navbar: React.FC = () => {
         <input
           type="text"
           name="query"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search"
           className=" placeholder-zinc-700 border border-zinc-800 font-medium  bg-black text-white text-[16px] sm:rounded-l-full w-[100%] py-2 px-4 outline-none"
         />
         <button className="hidden sm:block bg-zinc-700 py-[11px] px-4 rounded-r-full ">
           <IoIosSearch size={20} />
         </button>
-      </div>
+      </form>
 
       {/* profile icon */}
       <div>

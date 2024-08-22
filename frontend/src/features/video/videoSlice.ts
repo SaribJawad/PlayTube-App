@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Video {
   _id: string;
+  description: string;
   thumbnail: {
     url: string;
     public_id: string;
@@ -53,12 +54,12 @@ const videoSlice = createSlice({
     },
     searchResultsSuccess: (state, action: PayloadAction<Video[]>) => {
       state.loading = false;
-      state.allVideos = action.payload;
+      state.searchResults = action.payload;
       state.error = null;
     },
     channelVideosSuccess: (state, action: PayloadAction<Video[]>) => {
       state.loading = false;
-      state.allVideos = action.payload;
+      state.channelVideos = action.payload;
       state.error = null;
     },
     videoFailure: (state, action: PayloadAction<string>) => {
