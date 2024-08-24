@@ -9,12 +9,12 @@ const SearchResultPage: React.FC = () => {
   const queryVideo = queryResult.searchResults;
 
   return (
-    <div className="pt-20 bg-black text-white min-h-full w-full sm:pl-[60px] lg:pl-[260px]  sm:pb-0 pb-[70px]  flex flex-col gap-1">
+    <div className="pt-20 lg:pt-24  bg-black text-white min-h-full w-full sm:pl-[60px] lg:pl-[260px]  sm:pb-0 pb-[70px]  flex flex-col  lg:gap-3 ">
       {queryVideo.length === 0 && !queryResult.loading && <NoResults />}
 
       {queryResult.loading ? (
-        <div className="absolute top-[50%] left-[50%]">
-          <LoadingSpinner />
+        <div className="fixed top-[50%] left-[50%]">
+          <LoadingSpinner width="14" height="14" />
         </div>
       ) : (
         queryVideo.map((video) => (

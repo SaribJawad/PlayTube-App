@@ -33,6 +33,7 @@ interface VideoThumbnailCard {
 
 const VideoThumbnailCard: React.FC<VideoThumbnailCard> = ({ video }) => {
   const {
+    _id,
     thumbnail: { url: thumbnailUrl },
     title,
     duration,
@@ -43,12 +44,11 @@ const VideoThumbnailCard: React.FC<VideoThumbnailCard> = ({ video }) => {
       avatar: { url: avatarUrl },
     },
   } = video;
-  console.log();
 
   return (
     <div className=" h-[270px] w-[100%]">
       <div className=" h-[72%] relative rounded-xl overflow-hidden hover:rounded-none transition-all duration-300 ease-in-out ">
-        <Link to={""}>
+        <Link to={`/videoView/${_id}`}>
           <img
             className=" object-cover w-full h-full"
             src={thumbnailUrl}
@@ -70,7 +70,7 @@ const VideoThumbnailCard: React.FC<VideoThumbnailCard> = ({ video }) => {
           </Link>
         </div>
         <div className="w-[81%] h-full  ">
-          <Link to={""}>
+          <Link to={`/videoView/${_id}`}>
             <h1 className=" text-sm mid-w-full truncate">{title}</h1>
             <h2 className="inline-block text-[13px] text-zinc-500 hover:text-white">
               {username}

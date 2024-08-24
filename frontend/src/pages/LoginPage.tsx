@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
   if (auth.loading) {
     return (
       <div className=" min-h-[100vh]  flex-col bg-[#121212] text-white flex justify-center items-center">
-        <LoadingSpinner />
+        <LoadingSpinner width="8" height="8" />
       </div>
     );
   }

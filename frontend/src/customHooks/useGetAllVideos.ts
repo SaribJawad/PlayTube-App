@@ -12,6 +12,7 @@ import {
 
 interface Video {
   _id: string;
+  description: string;
   thumbnail: {
     url: string;
     public_id: string;

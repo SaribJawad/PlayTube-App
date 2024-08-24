@@ -9,25 +9,20 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [shoudlFetch, setShouldFetch] = useState<boolean>(false);
-
-  const { refetch } = useGetSearchVideos(searchQuery, shoudlFetch);
+  const { refetch } = useGetSearchVideos();
   const navigate = useNavigate();
 
   function toggleMenu(): void {
     setIsOpen((prev) => !prev);
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      setShouldFetch(true);
-      refetch();
+    if (!searchQuery.trim()) return;
+    refetch();
 
-      setSearchQuery("");
-      setShouldFetch(false);
-      navigate("/searchResult");
-    }
+    navigate(`/searchResult/${searchQuery.trim()}`);
+    setSearchQuery("");
   }
 
   return (

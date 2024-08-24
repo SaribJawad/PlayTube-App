@@ -9,8 +9,8 @@ export default {
     extend: {
       screens: {
         custom: "702px",
+        customVideoView: "1450px",
       },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
 };

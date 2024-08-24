@@ -5,6 +5,7 @@ import {
   videoFailure,
   videoRequest,
 } from "../features/video/videoSlice";
+import { useParams } from "react-router-dom";
 
 interface Video {
   _id: string;
@@ -40,15 +41,16 @@ interface SearchResponse {
 interface ErrorResponse {
   message: string;
 }
-
-const useGetSearchVideos = (searchQuery: string, shouldFetch: boolean) => {
+// shouldFetch: boolean
+const useGetSearchVideos = () => {
   const dispatch = useAppDispatch();
+  const { query } = useParams<{ query: string }>();
 
-  async function fetchSearchedVideos(searchQuery: string) {
+  async function fetchSearchedVideos(query: string | undefined) {
     try {
       dispatch(videoRequest());
       const response = await fetch(
-        `/api/v1/videos?page=1&limit=10&sortBy=createdAt&sortType=desc&query=${searchQuery}`,
+        `/api/v1/videos?page=1&limit=10&sortBy=createdAt&sortType=desc&query=${query}`,
         {
           method: "GET",
           credentials: "include",
@@ -75,9 +77,12 @@ const useGetSearchVideos = (searchQuery: string, shouldFetch: boolean) => {
   }
 
   return useQuery<SearchResponse, ErrorResponse>({
-    queryKey: ["searchedVideos"],
-    queryFn: () => fetchSearchedVideos(searchQuery),
-    enabled: shouldFetch && !!searchQuery,
+    queryKey: ["searchedVideos", query],
+    queryFn: () => fetchSearchedVideos(query),
+    enabled: !!query,
+    staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 

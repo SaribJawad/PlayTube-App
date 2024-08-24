@@ -9,6 +9,7 @@ import SignUpPage from "./pages/SignUpPage";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import PublicRoute from "./ui/PublicRoute";
 import SearchResultPage from "./pages/SearchResultPage";
+import VideoDetailPage from "./pages/VideoDetailPage";
 
 const App: React.FC = () => (
   <Routes>
@@ -17,7 +18,8 @@ const App: React.FC = () => (
       element={<ProtectedRoute component={MainLayout} path="/" />}
     >
       <Route index element={<HomePage />} />
-      <Route path="searchResult" element={<SearchResultPage />} />
+      <Route path="/searchResult/:query" element={<SearchResultPage />} />
+      <Route path="/videoView/:videoId" element={<VideoDetailPage />} />
       <Route path="dashboard" element={<Dashboard />} />
     </Route>
     <Route
