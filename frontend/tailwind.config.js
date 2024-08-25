@@ -12,5 +12,6 @@ export default {
         customVideoView: "1450px",
       },
     },
+    plugins: [require("@tailwindcss/aspect-ratio")],
   },
 };

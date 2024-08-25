@@ -239,10 +239,34 @@ const getVideoById = asyncHandler(async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "video",
+        as: "likes",
+      },
+    },
+
+    {
       $addFields: {
         owner: {
           $first: "$owner",
         },
+        likes: {
+          $size: "$likes",
+        },
+      },
+    },
+    {
+      $project: {
+        updatedAt: 0,
+        "owner.email": 0,
+        "owner.watchedHistory": 0,
+        "owner.createdAt": 0,
+        "owner.password": 0,
+        "owner.refreshToken": 0,
+        "owner.updatedAt": 0,
+        "owner.coverImage": 0,
       },
     },
   ]);
@@ -253,7 +277,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, video, "Video fetched successfully"));
+    .json(new ApiResponse(200, video[0], "Video fetched successfully"));
 });
 
 const updateVideo = asyncHandler(async (req, res) => {

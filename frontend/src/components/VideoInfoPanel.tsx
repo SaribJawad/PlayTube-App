@@ -2,19 +2,39 @@ import React, { useState } from "react";
 import { BiLike } from "react-icons/bi";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { VscFileSymlinkDirectory } from "react-icons/vsc";
+import { useAppSelector } from "../app/hooks";
+import { formatViews } from "../utils/formatViews";
+import { formatDate } from "../utils/formateDate";
 
 const VideoInfoPanel: React.FC = () => {
   const [isOpenDescription, setIsOpenDescription] = useState<boolean>(false);
+  const videoInfo = useAppSelector((state) => state.video.video);
+
+  const {
+    title = "",
+    createdAt = "",
+    likes = 0,
+    description = "",
+    owner = {
+      username: "",
+      avatar: { url: "" },
+      subscribers: 0,
+      isSubscribed: false,
+    },
+    views = 0,
+  } = videoInfo || {};
 
   return (
     <div id="Video-details" className=" flex flex-col gap-3 p-2">
       <div id="Video-tile-views-uploadetime ">
-        <h1 className="text-xl">Cool hacks to get asdasds</h1>
-        <p className="text-sm text-zinc-600">25,2132 Views . 18 hours ago</p>
+        <h1 className="text-xl">{title}</h1>
+        <p className="text-sm text-zinc-600">
+          {formatViews(views)} Views . {formatDate(createdAt)}
+        </p>
       </div>
       <div id="likes-subscribe" className="w-full flex justify-between">
         <button className="flex items-center gap-1">
-          <BiLike size={25} /> <span className="text-sm">305</span>
+          <BiLike size={25} /> <span className="text-sm">{likes}</span>
         </button>
         <button className=" flex items-center gap-1">
           <VscFileSymlinkDirectory size={25} />
@@ -25,12 +45,14 @@ const VideoInfoPanel: React.FC = () => {
         <div className="flex items-center gap-2">
           <img
             className="w-12 h-12 rounded-full"
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            src={owner.avatar.url}
             alt=""
           />
           <div>
-            <h2 className="text-md">Chai aur code</h2>
-            <p className="text-xs text-zinc-500">123k Subscribers</p>
+            <h2 className="text-md">{owner.username}</h2>
+            <p className="text-xs text-zinc-500">
+              {formatViews(owner.subscribers)} Subscribers
+            </p>
           </div>
         </div>
         <button className="flex items-center gap-1">
@@ -45,10 +67,7 @@ const VideoInfoPanel: React.FC = () => {
         <p
           className={`${isOpenDescription ? "block" : "hidden"} pb-8 text-sm `}
         >
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore dicta
-          ab error omnis alias rerum vero voluptas, ad maiores? Ad a dolorem,
-          dolor dicta tempore adipisci consequuntur nam quidem aliquam autem
-          minima!
+          {description}
         </p>
         <button
           onClick={() => setIsOpenDescription((prev) => !prev)}

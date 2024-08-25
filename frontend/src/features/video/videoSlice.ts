@@ -1,5 +1,38 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface VideoFile {
+  _id: string;
+  videoFile: {
+    url: string;
+    public_id: string;
+    _id: string;
+  };
+  description: string;
+  thumbnail: {
+    url: string;
+    public_id: string;
+    _id: string;
+  };
+  title: string;
+  duration: number;
+  views: 1;
+  isPublished: boolean;
+  owner: {
+    _id: string;
+    username: string;
+    fullname: string;
+    avatar: {
+      url: string;
+      public_id: string;
+      _id: string;
+    };
+    subscribers: number;
+    isSubscribed: boolean;
+  };
+  likes: number;
+  createdAt: string;
+}
+
 interface Video {
   _id: string;
   description: string;
@@ -25,6 +58,7 @@ interface Video {
 }
 
 interface VideoState {
+  video: VideoFile | null;
   allVideos: Video[];
   searchResults: Video[];
   channelVideos: Video[];
@@ -33,6 +67,7 @@ interface VideoState {
 }
 
 const initialState: VideoState = {
+  video: null,
   allVideos: [],
   searchResults: [],
   channelVideos: [],
@@ -46,6 +81,11 @@ const videoSlice = createSlice({
   reducers: {
     videoRequest: (state) => {
       state.loading = true;
+    },
+    getVideoSuccess: (state, action: PayloadAction<VideoFile>) => {
+      state.loading = false;
+      state.video = action.payload;
+      state.error = null;
     },
     allVideosSuccess: (state, action: PayloadAction<Video[]>) => {
       state.loading = false;
@@ -75,6 +115,7 @@ export const {
   searchResultsSuccess,
   channelVideosSuccess,
   videoFailure,
+  getVideoSuccess,
 } = videoSlice.actions;
 
 export default videoSlice.reducer;
