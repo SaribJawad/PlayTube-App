@@ -20,8 +20,6 @@ const LoginPage: React.FC = () => {
   const auth = useAppSelector((state) => state.auth);
   const { mutateAsync: login, error } = useLogin();
 
-  // show toast notification on error
-
   useEffect(() => {
     if (error) {
       toast.error(error.message, {
@@ -30,7 +28,6 @@ const LoginPage: React.FC = () => {
     }
   }, [error]);
 
-  // validation schema with yup
   const validationSchema = Yup.object({
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string().required("Password is required"),

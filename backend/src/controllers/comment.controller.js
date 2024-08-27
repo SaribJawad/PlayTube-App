@@ -35,16 +35,23 @@ const getVideoComments = asyncHandler(async (req, res) => {
     },
     {
       $addFields: {
-        owner: "$owner",
+        owner: { $arrayElemAt: ["$owner", 0] },
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
       },
     },
     {
       $project: {
         content: 1,
         video: 1,
+        createdAt: 1,
         "owner.username": 1,
         "owner.fullname": 1,
         "owner.avatar.url": 1,
+        "owner._id": 1,
       },
     },
   ])

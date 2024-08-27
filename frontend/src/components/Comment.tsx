@@ -1,0 +1,73 @@
+import React from "react";
+import { MdModeEditOutline, MdOutlineDeleteOutline } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { formatDate } from "../utils/formateDate";
+
+interface Comment {
+  _id: string;
+  content: string;
+  createdAt: string;
+  video: string;
+  owner: {
+    username: string;
+    fullname: string;
+    avatar: {
+      url: string;
+    };
+    _id: string;
+  };
+}
+
+interface CommentProps {
+  comment: Comment;
+  userId: string | undefined;
+}
+
+const Comment: React.FC<CommentProps> = ({ comment, userId }) => {
+  const {
+    _id: commentId,
+    content,
+    owner: {
+      username,
+      fullname,
+      avatar: { url },
+      _id,
+    },
+    createdAt,
+  } = comment;
+
+  return (
+    <div
+      id="comment"
+      className="flex justify-start   items-start gap-3 h-auto "
+    >
+      <img className="w-8 h-8 rounded-full" src={url} alt="profile picture" />
+      <div className="w-full">
+        <div className="w-full flex items-center justify-between">
+          <h1 className="text-sm">
+            {fullname} •{" "}
+            <span className="text-xs text-zinc-500">
+              {formatDate(createdAt)}
+            </span>
+          </h1>
+          {_id === userId && (
+            <div className="flex gap-2 items-center">
+              <button>
+                <MdModeEditOutline size={18} />
+              </button>
+              <button>
+                <MdOutlineDeleteOutline size={18} />
+              </button>
+            </div>
+          )}
+        </div>
+        <p className="text-xs  text-zinc-500  hover:text-white">
+          <Link to={""}> @{username}</Link>
+        </p>
+        <p className="text-sm mt-2">{content}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Comment;

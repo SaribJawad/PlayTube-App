@@ -28,7 +28,7 @@ const initialState: AuthState = {
   isAuthenticated: JSON.parse(
     localStorage.getItem("isAuthenticated") || "false"
   ),
-  user: null,
+  user: JSON.parse(localStorage.getItem("user") || "null"),
   loading: false,
   error: null,
 };
@@ -46,6 +46,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     loginFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
@@ -59,8 +60,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload;
       state.error = null;
-
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     signupFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -71,6 +72,7 @@ const authSlice = createSlice({
       state.user = null;
       state.error = null;
       localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("user");
     },
   },
 });

@@ -10,6 +10,7 @@ import useGetVideo from "../customHooks/useGetVideo";
 const VideoDetailPage: React.FC = () => {
   useGetAllVideos();
   useGetVideo();
+
   const recommendedVideo = useAppSelector((state) => state.video.allVideos);
 
   return (
