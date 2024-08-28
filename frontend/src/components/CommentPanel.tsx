@@ -5,9 +5,11 @@ import { useAppSelector } from "../app/hooks";
 import Comment from "./Comment";
 import useAddComment from "../customHooks/useAddComment";
 import { Flip, toast, ToastContainer } from "react-toastify";
+import useUpdateComment from "../customHooks/useUpdateComment";
 
 const CommentPanel: React.FC = () => {
-  const { mutate: addComment, error, isPending } = useAddComment();
+  const { mutate: addComment } = useAddComment();
+  const { mutate: updatedComment } = useUpdateComment();
   const { invalidateComment } = useGetVideoComments();
   const [comment, setComment] = useState<string>("");
   const user = useAppSelector((state) => state.auth.user);
@@ -26,6 +28,22 @@ const CommentPanel: React.FC = () => {
         toast.success("Comment added successfully!");
       },
     });
+  }
+
+  function handleUpdate(id: string, newContent: string) {
+    if (newContent.trim() === "") {
+      toast.error("Comment cannot be empty");
+      return;
+    }
+    updatedComment(
+      { content: newContent, commentId: id },
+      {
+        onSuccess: () => {
+          invalidateComment();
+          toast.success("Comment updated successfully");
+        },
+      }
+    );
   }
 
   return (
@@ -58,7 +76,12 @@ const CommentPanel: React.FC = () => {
       <span className="h-[1px] border w-full mt-3 mb-3"></span>
       <div className="flex flex-col gap-5">
         {comments.map((comment) => (
-          <Comment key={comment._id} comment={comment} userId={user?._id} />
+          <Comment
+            key={comment._id}
+            comment={comment}
+            userId={user?._id}
+            handleUpdate={handleUpdate}
+          />
         ))}
       </div>
     </div>

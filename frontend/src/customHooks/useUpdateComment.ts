@@ -1,18 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 
-interface Data {
+interface UpdatedComment {
+  _id: string;
   content: string;
   video: string;
   owner: string;
-  _id: string;
   createdAt: string;
   updatedAt: string;
+  __v: number;
 }
 
-interface AddCommentResponse {
-  statusCode: number;
-  data: Data;
+interface UpdateCommentResponse {
+  status: number;
+  data: UpdatedComment;
   message: string;
   success: boolean;
 }
@@ -21,13 +21,16 @@ interface ErrorResponse {
   message: string;
 }
 
-const useAddComment = () => {
-  const { videoId } = useParams<{ videoId: string }>();
+interface UpdateCommentArgs {
+  content: string;
+  commentId: string;
+}
 
-  return useMutation<AddCommentResponse, ErrorResponse, string>({
-    mutationFn: async (content) => {
-      const response = await fetch(`/api/v1/comments/${videoId}`, {
-        method: "POST",
+const useUpdateComment = () => {
+  return useMutation<UpdateCommentResponse, ErrorResponse, UpdateCommentArgs>({
+    mutationFn: async ({ content, commentId }) => {
+      const response = await fetch(`/api/v1/comments/c/${commentId}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -43,4 +46,4 @@ const useAddComment = () => {
   });
 };
 
-export default useAddComment;
+export default useUpdateComment;

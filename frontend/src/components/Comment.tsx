@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdModeEditOutline, MdOutlineDeleteOutline } from "react-icons/md";
+import { FiSave } from "react-icons/fi";
+
 import { Link } from "react-router-dom";
 import { formatDate } from "../utils/formateDate";
 
@@ -21,9 +23,13 @@ interface Comment {
 interface CommentProps {
   comment: Comment;
   userId: string | undefined;
+  handleUpdate: (id: string, newContent: string) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, userId }) => {
+const Comment: React.FC<CommentProps> = ({ comment, userId, handleUpdate }) => {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editContent, setEditContent] = useState<string>(comment.content);
+
   const {
     _id: commentId,
     content,
@@ -35,6 +41,11 @@ const Comment: React.FC<CommentProps> = ({ comment, userId }) => {
     },
     createdAt,
   } = comment;
+
+  function handleSaveClick() {
+    handleUpdate(commentId, editContent);
+    setIsEditing(editContent.trim() === "" ? true : false);
+  }
 
   return (
     <div
@@ -50,21 +61,43 @@ const Comment: React.FC<CommentProps> = ({ comment, userId }) => {
               {formatDate(createdAt)}
             </span>
           </h1>
-          {_id === userId && (
-            <div className="flex gap-2 items-center">
-              <button>
-                <MdModeEditOutline size={18} />
+          <div
+            className={`${
+              _id === userId ? "block" : "hidden"
+            } flex gap-2 items-center`}
+          >
+            {isEditing ? (
+              <button onClick={handleSaveClick}>
+                <FiSave size={18} />
               </button>
-              <button>
-                <MdOutlineDeleteOutline size={18} />
-              </button>
-            </div>
-          )}
+            ) : (
+              <>
+                <button onClick={() => setIsEditing((prev) => !prev)}>
+                  <MdModeEditOutline size={18} />
+                </button>
+
+                <button>
+                  <MdOutlineDeleteOutline size={18} />
+                </button>
+              </>
+            )}
+          </div>
         </div>
         <p className="text-xs  text-zinc-500  hover:text-white">
           <Link to={""}> @{username}</Link>
         </p>
-        <p className="text-sm mt-2">{content}</p>
+        {isEditing ? (
+          <div className="text-sm  w-full">
+            <input
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              type="text"
+              className="w-full mt-2 p-2 border-none outline-none bg-zinc-900 rounded-lg"
+            />
+          </div>
+        ) : (
+          <p className="text-sm mt-2">{content}</p>
+        )}
       </div>
     </div>
   );
