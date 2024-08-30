@@ -24,9 +24,15 @@ interface CommentProps {
   comment: Comment;
   userId: string | undefined;
   handleUpdate: (id: string, newContent: string) => void;
+  handleDelete: (commendId: string) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, userId, handleUpdate }) => {
+const Comment: React.FC<CommentProps> = ({
+  comment,
+  userId,
+  handleUpdate,
+  handleDelete,
+}) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editContent, setEditContent] = useState<string>(comment.content);
 
@@ -45,6 +51,10 @@ const Comment: React.FC<CommentProps> = ({ comment, userId, handleUpdate }) => {
   function handleSaveClick() {
     handleUpdate(commentId, editContent);
     setIsEditing(editContent.trim() === "" ? true : false);
+  }
+
+  function handleDeleteClick() {
+    handleDelete(commentId);
   }
 
   return (
@@ -76,7 +86,7 @@ const Comment: React.FC<CommentProps> = ({ comment, userId, handleUpdate }) => {
                   <MdModeEditOutline size={18} />
                 </button>
 
-                <button>
+                <button onClick={handleDeleteClick}>
                   <MdOutlineDeleteOutline size={18} />
                 </button>
               </>

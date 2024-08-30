@@ -36,7 +36,7 @@ interface VideoFile {
     subscribers: number;
     isSubscribed: boolean;
   };
-  likes: number;
+  likes: string[];
   createdAt: string;
 }
 
@@ -72,6 +72,7 @@ const useGetVideo = () => {
         }
         const data: VideoResponse = await response.json();
         dispatch(getVideoSuccess(data?.data));
+        console.log(data);
 
         return data;
       } catch (error) {

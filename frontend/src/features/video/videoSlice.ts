@@ -29,7 +29,7 @@ interface VideoFile {
     subscribers: number;
     isSubscribed: boolean;
   };
-  likes: number;
+  likes: string[];
   createdAt: string;
 }
 

@@ -76,7 +76,6 @@ const useGetVideoComments = () => {
   });
 
   const invalidateComment = (): void => {
-    console.log("Invalidating comments...");
     queryClient.invalidateQueries({ queryKey: ["comment", videoId] });
   };
 

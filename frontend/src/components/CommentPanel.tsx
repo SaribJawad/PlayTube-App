@@ -6,10 +6,12 @@ import Comment from "./Comment";
 import useAddComment from "../customHooks/useAddComment";
 import { Flip, toast, ToastContainer } from "react-toastify";
 import useUpdateComment from "../customHooks/useUpdateComment";
+import useDeleteComment from "../customHooks/useDeleteComment";
 
 const CommentPanel: React.FC = () => {
   const { mutate: addComment } = useAddComment();
   const { mutate: updatedComment } = useUpdateComment();
+  const { mutate: deleteComment } = useDeleteComment();
   const { invalidateComment } = useGetVideoComments();
   const [comment, setComment] = useState<string>("");
   const user = useAppSelector((state) => state.auth.user);
@@ -44,6 +46,15 @@ const CommentPanel: React.FC = () => {
         },
       }
     );
+  }
+
+  function handleDelete(commentId: string) {
+    deleteComment(commentId, {
+      onSuccess: () => {
+        invalidateComment();
+        toast.success("Comment deleted successfully");
+      },
+    });
   }
 
   return (
@@ -81,6 +92,7 @@ const CommentPanel: React.FC = () => {
             comment={comment}
             userId={user?._id}
             handleUpdate={handleUpdate}
+            handleDelete={handleDelete}
           />
         ))}
       </div>

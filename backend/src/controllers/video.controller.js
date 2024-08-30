@@ -252,9 +252,8 @@ const getVideoById = asyncHandler(async (req, res) => {
         owner: {
           $first: "$owner",
         },
-        likes: {
-          $size: "$likes",
-        },
+
+        likes: "$likes.likedBy",
       },
     },
     {

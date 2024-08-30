@@ -1,19 +1,23 @@
 import React, { useState } from "react";
-import { BiLike } from "react-icons/bi";
+import { BiLike, BiDislike } from "react-icons/bi";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { VscFileSymlinkDirectory } from "react-icons/vsc";
 import { useAppSelector } from "../app/hooks";
 import { formatViews } from "../utils/formatViews";
 import { formatDate } from "../utils/formateDate";
+import useLikeToggleVideo from "../customHooks/useLikeToggleVideo";
 
 const VideoInfoPanel: React.FC = () => {
   const [isOpenDescription, setIsOpenDescription] = useState<boolean>(false);
   const videoInfo = useAppSelector((state) => state.video.video);
+  const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
+  const { mutate: likeToggleVideo } = useLikeToggleVideo();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const {
     title = "",
     createdAt = "",
-    likes = 0,
+    likes = [],
     description = "",
     owner = {
       username: "",
@@ -24,6 +28,13 @@ const VideoInfoPanel: React.FC = () => {
     views = 0,
   } = videoInfo || {};
 
+  function handleLike() {
+    likeToggleVideo();
+    if (loggedInUserId) {
+      setIsLiked(likes.includes(loggedInUserId) ? false : true);
+    }
+  }
+
   return (
     <div id="Video-details" className=" flex flex-col gap-3 p-2">
       <div id="Video-tile-views-uploadetime ">
@@ -33,9 +44,18 @@ const VideoInfoPanel: React.FC = () => {
         </p>
       </div>
       <div id="likes-subscribe" className="w-full flex justify-between">
-        <button className="flex items-center gap-1">
-          <BiLike size={25} /> <span className="text-sm">{likes}</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-1" onClick={handleLike}>
+            <BiLike
+              className="focus:scale-75   transition-transform"
+              size={25}
+            />{" "}
+          </button>
+          <span className="text-sm">{likes.length}</span>
+          <button disabled={!isLiked} onClick={handleLike}>
+            <BiDislike size={25} />{" "}
+          </button>
+        </div>
         <button className=" flex items-center gap-1">
           <VscFileSymlinkDirectory size={25} />
           <span className="text-sm">Save</span>

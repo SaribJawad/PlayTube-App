@@ -10,7 +10,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 
   const isLiked = await Like.findOne({
     video: videoId,
-    owner: userId,
+    likedBy: userId,
   });
 
   if (isLiked) {
