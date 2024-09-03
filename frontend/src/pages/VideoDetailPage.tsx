@@ -8,7 +8,7 @@ import CommentPanel from "../components/CommentPanel";
 import useGetVideo from "../customHooks/useGetVideo";
 
 const VideoDetailPage: React.FC = () => {
-  useGetAllVideos();
+  useGetAllVideos({ page: 1, limit: 10, sortBy: "createdAt", sortType: "asc" });
   useGetVideo();
 
   const recommendedVideo = useAppSelector((state) => state.video.allVideos);

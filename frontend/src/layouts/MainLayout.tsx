@@ -4,11 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SideMenu from "../components/SideMenu";
 
-interface MainLayoutProps {
-  children?: React.ReactNode;
-}
-
-const MainLayout: React.FC<MainLayoutProps> = () => {
+const MainLayout: React.FC = () => {
   return (
     <div className="bg-black h-screen ">
       <Navbar />

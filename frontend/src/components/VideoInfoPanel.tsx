@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { BiLike, BiDislike } from "react-icons/bi";
+import React, { useEffect, useState } from "react";
+import { BiLike } from "react-icons/bi";
 import { IoPersonAddOutline } from "react-icons/io5";
+import { BiSolidLike } from "react-icons/bi";
+
 import { VscFileSymlinkDirectory } from "react-icons/vsc";
 import { useAppSelector } from "../app/hooks";
 import { formatViews } from "../utils/formatViews";
@@ -25,8 +27,14 @@ const VideoInfoPanel: React.FC = () => {
       subscribers: 0,
       isSubscribed: false,
     },
-    views = 0,
+    views = [],
   } = videoInfo || {};
+
+  useEffect(() => {
+    if (loggedInUserId) {
+      setIsLiked(likes.includes(loggedInUserId));
+    }
+  }, [likes, loggedInUserId]);
 
   function handleLike() {
     likeToggleVideo();
@@ -40,22 +48,16 @@ const VideoInfoPanel: React.FC = () => {
       <div id="Video-tile-views-uploadetime ">
         <h1 className="text-xl">{title}</h1>
         <p className="text-sm text-zinc-600">
-          {formatViews(views)} Views . {formatDate(createdAt)}
+          {views.length > 0 ? formatViews(views.length) : 0} Views .{" "}
+          {formatDate(createdAt)}
         </p>
       </div>
       <div id="likes-subscribe" className="w-full flex justify-between">
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-1" onClick={handleLike}>
-            <BiLike
-              className="focus:scale-75   transition-transform"
-              size={25}
-            />{" "}
-          </button>
+        <button className="flex items-center gap-3" onClick={handleLike}>
+          {isLiked ? <BiSolidLike size={25} /> : <BiLike size={25} />}
           <span className="text-sm">{likes.length}</span>
-          <button disabled={!isLiked} onClick={handleLike}>
-            <BiDislike size={25} />{" "}
-          </button>
-        </div>
+        </button>
+
         <button className=" flex items-center gap-1">
           <VscFileSymlinkDirectory size={25} />
           <span className="text-sm">Save</span>

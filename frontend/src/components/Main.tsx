@@ -4,7 +4,12 @@ import { useAppSelector } from "../app/hooks";
 import LoadingSpinner from "./LoadingSpinner";
 
 const Main: React.FC = () => {
-  useGetAllVideos();
+  useGetAllVideos({
+    page: 1,
+    limit: 10,
+    sortBy: "createdAt",
+    sortType: "asc",
+  });
   const video = useAppSelector((state) => state.video);
 
   return (

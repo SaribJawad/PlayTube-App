@@ -4,11 +4,13 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import Slider from "./Slider";
 import { Link, useNavigate } from "react-router-dom";
 import useGetSearchVideos from "../customHooks/useGetSearchVideos";
+import { useAppSelector } from "../app/hooks";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const loggedInUser = useAppSelector((state) => state?.auth?.user);
   const { refetch } = useGetSearchVideos();
   const navigate = useNavigate();
 
@@ -23,13 +25,16 @@ const Navbar: React.FC = () => {
 
     navigate(`/searchResult/${searchQuery.trim()}`);
     setSearchQuery("");
+    setOpenSearch(false);
   }
 
   return (
     <nav className="z-10 w-screen border-b border-zinc-800 fixed h-20 bg-black text-white flex items-center justify-between px-4">
-      <h1 className="text-center md:text-[23px] text-[20px] font-bold font-Montserrat mx-3">
-        Play<span className="text-red-700">Tube</span>
-      </h1>
+      <Link to={""}>
+        <h1 className="text-center md:text-[23px] text-[20px] font-bold font-Montserrat mx-3">
+          Play<span className="text-red-700">Tube</span>
+        </h1>
+      </Link>
 
       <form
         onSubmit={(e) => handleSubmit(e)}
@@ -52,10 +57,10 @@ const Navbar: React.FC = () => {
 
       {/* profile icon */}
       <div>
-        <Link to={""}>
+        <Link to={`/profile/${loggedInUser?._id}/${loggedInUser?.username}`}>
           <img
             className=" hidden sm:block max-w-12 rounded-full mx-3 "
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png  "
+            src={loggedInUser?.avatar.url}
             alt="Profile"
           />
         </Link>

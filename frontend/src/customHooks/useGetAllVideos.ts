@@ -1,11 +1,8 @@
-import {
-  QueryObserverResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch } from "../app/hooks";
 import {
   allVideosSuccess,
+  channelVideosSuccess,
   videoFailure,
   videoRequest,
 } from "../features/video/videoSlice";
@@ -20,7 +17,7 @@ interface Video {
   };
   title: string;
   duration: number;
-  views: 1;
+  views: string[];
   owner: {
     _id: string;
     username: string;
@@ -45,19 +42,26 @@ interface ErrorResponse {
   message: string;
 }
 
-const useGetAllVideos = (): QueryObserverResult<
-  VideoResponse,
-  ErrorResponse
-> & { invalidateVideos: () => void } => {
+interface FetchVideosParams {
+  page: number;
+  limit: number;
+  sortBy: string;
+  sortType: "asc" | "desc";
+  userId?: string;
+}
+
+const useGetAllVideos = (
+  params: FetchVideosParams
+): { invalidateVideos: () => void } => {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-
   const queryResult = useQuery<VideoResponse, ErrorResponse>({
-    queryKey: ["videos"],
+    queryKey: ["videos", params],
     queryFn: async () => {
       try {
         dispatch(videoRequest());
-        const response = await fetch("/api/v1/videos", {
+        const urlParams = new URLSearchParams(params as any);
+        const response = await fetch(`/api/v1/videos?${urlParams.toString()}`, {
           method: "GET",
           credentials: "include",
         });
@@ -67,7 +71,10 @@ const useGetAllVideos = (): QueryObserverResult<
           throw new Error(error.message);
         }
         const data: VideoResponse = await response.json();
-        dispatch(allVideosSuccess(data?.data));
+        if (params?.userId) {
+          dispatch(channelVideosSuccess(data?.data));
+        } else dispatch(allVideosSuccess(data?.data));
+
         return data;
       } catch (error) {
         if (error instanceof Error) {
@@ -79,7 +86,7 @@ const useGetAllVideos = (): QueryObserverResult<
         }
       }
     },
-    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 60 * 60,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

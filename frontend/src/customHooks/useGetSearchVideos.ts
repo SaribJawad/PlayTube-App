@@ -17,7 +17,7 @@ interface Video {
   };
   title: string;
   duration: number;
-  views: 1;
+  views: string[];
   owner: {
     _id: string;
     username: string;

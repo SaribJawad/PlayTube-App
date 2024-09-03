@@ -24,7 +24,7 @@ interface Video {
     url: string;
   };
   title: string;
-  views: number;
+  views: string[];
 }
 
 interface VideoThumbnailCard {
@@ -41,6 +41,7 @@ const VideoThumbnailCard: React.FC<VideoThumbnailCard> = ({ video }) => {
     createdAt,
     owner: {
       username,
+      _id: ownerId,
       avatar: { url: avatarUrl },
     },
   } = video;
@@ -61,7 +62,7 @@ const VideoThumbnailCard: React.FC<VideoThumbnailCard> = ({ video }) => {
       </div>
       <div className="h-[28%]  flex items-center gap-2 p-2">
         <div className="w-[40px] h-[40px]   rounded-full overflow-hidden">
-          <Link to={""} className="">
+          <Link to={`/profile/${ownerId}/${username}`} className="">
             <img
               className="h-full w-full  object-cover"
               src={avatarUrl}
@@ -76,7 +77,8 @@ const VideoThumbnailCard: React.FC<VideoThumbnailCard> = ({ video }) => {
               {username}
             </h2>
             <h3 className="text-[12px] text-zinc-500 ">
-              {formatViews(views)} views • {formatDate(createdAt)}
+              {views.length > 0 ? formatViews(views.length) : 0} views •{" "}
+              {formatDate(createdAt)}
             </h3>
           </Link>
         </div>

@@ -1,4 +1,4 @@
-import mongoose, { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId, mongo } from "mongoose";
 import { Video } from "../models/video.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -19,12 +19,10 @@ const getAllVideos = asyncHandler(async (req, res) => {
     userId,
   } = req.query;
 
-  // Ensure the page and limit are integers
   const pageNumber = parseInt(page, 10);
   const limitNumber = parseInt(limit, 10);
   const sortDirection = sortType === "asc" ? 1 : -1;
 
-  // Build the filter query
   const filter = [];
 
   if (query) {
@@ -38,7 +36,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
   if (userId) {
     filter.push({
       $match: {
-        owner: mongoose.Types.ObjectId(userId),
+        owner: new mongoose.Types.ObjectId(userId),
       },
     });
   }
@@ -106,8 +104,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
   try {
     // Fetch the videos
     const videos = await Video.aggregate(pipeline);
-
-    const totalVideos = await Video.countDocuments(filter);
 
     res.status(200).json(
       new ApiResponse(
@@ -200,11 +196,29 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+  const userId = req?.user?._id;
 
-  await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } }, { new: true });
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(500, "Invalid video ID");
+  }
+
+  if (userId && !video.views.includes(userId)) {
+    await Video.findByIdAndUpdate(
+      videoId,
+      {
+        $addToSet: { views: userId },
+      },
+      {
+        new: true,
+      }
+    );
+  }
+
+  // await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } }, { new: true });
 
   // Aggregate to get video details
-  const video = await Video.aggregate([
+  const videoDetail = await Video.aggregate([
     {
       $match: {
         _id: new mongoose.Types.ObjectId(videoId),
@@ -274,9 +288,11 @@ const getVideoById = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Invalid video ID");
   }
 
+  console.log(videoDetail, "fetched video");
+
   return res
     .status(200)
-    .json(new ApiResponse(200, video[0], "Video fetched successfully"));
+    .json(new ApiResponse(200, videoDetail[0], "Video fetched successfully"));
 });
 
 const updateVideo = asyncHandler(async (req, res) => {

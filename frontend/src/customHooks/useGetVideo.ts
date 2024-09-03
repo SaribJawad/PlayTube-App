@@ -22,7 +22,7 @@ interface VideoFile {
   };
   title: string;
   duration: number;
-  views: 1;
+  views: string[];
   isPublished: boolean;
   owner: {
     _id: string;

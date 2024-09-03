@@ -25,7 +25,7 @@ interface Video {
     url: string;
   };
   title: string;
-  views: number;
+  views: string[];
 }
 
 interface VideoThumbnailCard {
@@ -34,6 +34,7 @@ interface VideoThumbnailCard {
 
 const SearchResultCard: React.FC<VideoThumbnailCard> = ({ video }) => {
   const {
+    _id,
     description,
     thumbnail: { url: thumbnailUrl },
     title,
@@ -49,7 +50,7 @@ const SearchResultCard: React.FC<VideoThumbnailCard> = ({ video }) => {
   return (
     <div className="lg:h-[250px] custom:h-[220px] overflow-hidden w-full  custom:gap-4 flex custom:flex-row flex-col gap-1 custom:pt-3 lg:p-0 p-3">
       <div className="relative  rounded-xl overflow-hidden hover:rounded-none transition-all duration-300 ease-in-out  lg:w-[380px] w-full custom:w-[350px]   h-full ">
-        <Link to={""}>
+        <Link to={`/videoView/${_id}`}>
           <img
             className="w-full h-full object-cover"
             src={thumbnailUrl}
@@ -63,7 +64,8 @@ const SearchResultCard: React.FC<VideoThumbnailCard> = ({ video }) => {
       <div className="h-full custom:w-[calc(100%-400px)]  w-full flex flex-col gap-1 ">
         <h1 className="custom:text-lg text-md  ">{title} </h1>
         <span className="text-sm text-zinc-500">
-          {formatViews(views)} Views · {formatDate(createdAt)}
+          {views.length ? formatViews(views.length) : 0} Views ·{" "}
+          {formatDate(createdAt)}
         </span>
         <div className="flex items-center gap-2 p-1">
           <img className="w-5 h-5 rounded-full" src={avatarUrl} alt="" />
