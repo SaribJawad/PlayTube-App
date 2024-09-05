@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import VideoReducer from "../features/video/videoSlice";
+import TweetReducer from "../features/Tweet/tweetSlice";
 import CommentReducer from "../features/comment/commentSlice";
 
 export const store = configureStore({
@@ -8,6 +9,7 @@ export const store = configureStore({
     auth: authReducer,
     video: VideoReducer,
     comment: CommentReducer,
+    tweet: TweetReducer,
   },
 });
 

@@ -62,9 +62,53 @@ const createTweet = asyncHandler(async (req, res) => {
 const getUserTweets = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
-  const userTweets = await Tweet.find({
-    owner: userId,
-  });
+  const userTweets = await Tweet.aggregate([
+    {
+      $match: {
+        owner: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+      },
+    },
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "tweet",
+        as: "likes",
+      },
+    },
+    {
+      $addFields: {
+        likes: "$likes.likedBy",
+      },
+    },
+    {
+      $unwind: "$owner",
+    },
+    {
+      $project: {
+        _id: 1,
+        content: 1,
+        owner: {
+          _id: 1,
+          username: 1,
+          fullname: 1,
+          avatar: { url: 1 },
+        },
+        createdAt: 1,
+        likes: 1,
+      },
+    },
+  ]);
+
+  console.log(userTweets);
 
   if (!userTweets) {
     throw new ApiError(500, "Error while fetching user's tweets");

@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import UserVideoSection from "../components/UserVideoSection";
 import useGetChannelDetails from "../customHooks/useGetChannelDetails";
 import ChannelNavigation from "../components/ChannelNavigation";
+import UserTweetSection from "../components/UserTweetSection";
 
 const ChannelPage: React.FC = () => {
   const { userId, username } = useParams<{
@@ -30,7 +31,7 @@ const ChannelPage: React.FC = () => {
   };
 
   return (
-    <div className=" w-full text-white pt-20 bg-black   sm:pl-[70px] lg:pl-[260px]">
+    <div className=" w-full text-white pt-20 bg-black   sm:pl-[70px] lg:pl-[260px] pr-3">
       <ChannelHeader userDetails={data?.data} />
       <ChannelNavigation
         handleTabClick={handleTabClick}
@@ -38,7 +39,7 @@ const ChannelPage: React.FC = () => {
       />
       <div className=" pt-4 bg-black sm:pb-0 pb-[70px]">
         {activeTab === "videos" && <UserVideoSection />}
-        {activeTab === "tweets" && "tweets"}
+        {activeTab === "tweets" && <UserTweetSection />}
         {activeTab === "subscribed" && "subscribed"}
         {activeTab === "playlists" && "playlist"}
       </div>

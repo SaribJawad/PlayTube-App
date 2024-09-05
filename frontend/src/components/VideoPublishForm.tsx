@@ -62,10 +62,10 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
   handleClosePopup,
 }) => {
   const {
-    mutate: publishVideo,
+    mutateAsync: publishVideo,
     isPending,
     error,
-    isSuccess,
+    status,
   } = usePublishVideo();
   const [isDragging, setIsDragging] = useState(false);
   const {
@@ -78,12 +78,14 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit = async (data: FormValues) => {
+    await publishVideo(data);
 
-    publishVideo(data);
-    if (isSuccess) {
-      toast.success("Video published Successfully");
+    if (error) {
+      toast.error(error.message);
+    }
+
+    if (status === "idle") {
       handleClosePopup();
     }
   };

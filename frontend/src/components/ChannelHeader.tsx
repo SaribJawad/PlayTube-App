@@ -45,17 +45,17 @@ const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
         }
         alt=""
       />
-      <div className="flex sm:items-center sm:gap-0  gap-5  items-start justify-between p-5 flex-col sm:flex-row">
-        <div className=" flex items-center gap-5 ">
+      <div className="flex sm:items-center sm:gap-0  gap-5  items-start justify-between p-5 flex-row">
+        <div className=" flex items-center flex-col sm:flex-row gap-5 ">
           <img
-            className="w-32 h-32 rounded-full border-2 object-contain "
+            className="w-24 h-2w-24 rounded-full border-2 object-contain "
             src={userDetails?.avatar.url}
             alt=""
           />
-          <div>
-            <h1 className="text-2xl">{userDetails?.fullname}</h1>
-            <p className="text-sm text-zinc-400">@{userDetails?.username}</p>
-            <p className="text-sm text-zinc-400">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl">{userDetails?.fullname}</h1>
+            <p className="text-xs text-zinc-400">@{userDetails?.username}</p>
+            <p className="text-xs text-zinc-400">
               {userDetails && formatSubscribers(userDetails.subscribersCount)}{" "}
               subscribers .{" "}
               {userDetails &&
@@ -66,7 +66,7 @@ const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
         </div>
 
         {userId === loggedInUser?._id ? (
-          <button className="button-animation px-3 py-[10px] flex items-center gap-2    bg-red-800">
+          <button className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800">
             <span>
               <MdOutlineEdit size={20} />
             </span>

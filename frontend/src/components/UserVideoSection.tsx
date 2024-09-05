@@ -6,11 +6,12 @@ import ChannelEmptyVideo from "./ChannelEmptyVideo";
 import UploadVideoPopup from "./UploadVideoPopup";
 
 const UserVideoSection: React.FC = () => {
-  const [isOpenVideoModel, setIsOpenModel] = useState<boolean>();
+  const [isOpenVideoModel, setIsOpenVideoModel] = useState<boolean>(false);
   const { channelVideos, loading } = useAppSelector((state) => state.video);
 
   function handleClosePopup(): void {
-    setIsOpenModel((prev) => !prev);
+    setIsOpenVideoModel((prev) => !prev);
+    console.log("asd");
   }
 
   if (loading) {
@@ -24,7 +25,10 @@ const UserVideoSection: React.FC = () => {
   if (channelVideos.length === 0 && !loading) {
     return (
       <>
-        <ChannelEmptyVideo />
+        <ChannelEmptyVideo handleClosePopup={handleClosePopup} />
+        {isOpenVideoModel && (
+          <UploadVideoPopup handleClosePopup={handleClosePopup} />
+        )}
       </>
     );
   }

@@ -48,7 +48,7 @@ const SearchResultCard: React.FC<VideoThumbnailCard> = ({ video }) => {
   } = video;
 
   return (
-    <div className="lg:h-[250px] custom:h-[220px] overflow-hidden w-full  custom:gap-4 flex custom:flex-row flex-col gap-1 custom:pt-3 lg:p-0 p-3">
+    <div className="lg:h-[220px] custom:h-[220px] overflow-hidden w-full  custom:gap-4 flex custom:flex-row flex-col gap-1 custom:pt-3 lg:p-0 p-3">
       <div className="relative  rounded-xl overflow-hidden hover:rounded-none transition-all duration-300 ease-in-out  lg:w-[380px] w-full custom:w-[350px]   h-full ">
         <Link to={`/videoView/${_id}`}>
           <img

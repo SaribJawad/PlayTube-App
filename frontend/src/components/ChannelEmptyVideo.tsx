@@ -4,7 +4,15 @@ import { useAppSelector } from "../app/hooks";
 import { FaPlay } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 
-const ChannelEmptyVideo: React.FC = () => {
+type HandleClose = () => void;
+
+interface ChannelEmptyVideo {
+  handleClosePopup: HandleClose;
+}
+
+const ChannelEmptyVideo: React.FC<ChannelEmptyVideo> = ({
+  handleClosePopup,
+}) => {
   const { userId } = useParams<{ userId: string }>();
   const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
 
@@ -21,11 +29,14 @@ const ChannelEmptyVideo: React.FC = () => {
           : "You haven't posted any videos yet. Start uploading to see your videos here."}
       </h3>
       {userId === loggedInUserId && (
-        <button className="button-animation px-3 py-[10px] flex items-center gap-1    bg-red-800">
+        <button
+          className="button-animation px-3 py-[10px] flex items-center gap-1    bg-red-800"
+          onClick={handleClosePopup}
+        >
           <span>
             <GoPlus />
           </span>
-          New video
+          New Video
         </button>
       )}
     </div>
