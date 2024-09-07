@@ -13,7 +13,11 @@ const SideMenu: React.FC = () => {
     <div className="w-[60px] hidden text-white lg:w-[250px] h-full bg-[#000000] border-r border-zinc-800 sm:flex flex-col justify-between fixed pt-20">
       <ul className="px-2 py-5 flex flex-col gap-3">
         <MenuItem to="" icon={<GoHome size={25} />} label="Home" />
-        <MenuItem to="" icon={<BiLike size={25} />} label="Liked Videos" />
+        <MenuItem
+          to="/likedVideos"
+          icon={<BiLike size={25} />}
+          label="Liked Videos"
+        />
         <MenuItem
           to=""
           icon={<MdHistoryToggleOff size={25} />}

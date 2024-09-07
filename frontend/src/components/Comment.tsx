@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdModeEditOutline, MdOutlineDeleteOutline } from "react-icons/md";
 import { FiSave } from "react-icons/fi";
 
 import { Link } from "react-router-dom";
 import { formatDate } from "../utils/formateDate";
+import { BiLike, BiSolidLike } from "react-icons/bi";
+import useLikeToggleComment from "../customHooks/useLikeToggleComment";
+import useGetVideoComments from "../customHooks/useGetVideoComments";
+import { useAppSelector } from "../app/hooks";
 
 interface Comment {
   _id: string;
@@ -18,6 +22,7 @@ interface Comment {
     };
     _id: string;
   };
+  likes: string[];
 }
 
 interface CommentProps {
@@ -34,7 +39,11 @@ const Comment: React.FC<CommentProps> = ({
   handleDelete,
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const [editContent, setEditContent] = useState<string>(comment.content);
+  const { mutateAsync: LikeToggleComment } = useLikeToggleComment();
+  const { invalidateComment } = useGetVideoComments();
+  const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
 
   const {
     _id: commentId,
@@ -45,17 +54,34 @@ const Comment: React.FC<CommentProps> = ({
       avatar: { url },
       _id,
     },
+    likes,
     createdAt,
   } = comment;
 
-  function handleSaveClick() {
-    handleUpdate(commentId, editContent);
+  function handleSaveClick(commentId: string, editContent: string) {
+    if (editContent !== content) {
+      handleUpdate(commentId, editContent);
+    }
     setIsEditing(editContent.trim() === "" ? true : false);
   }
 
-  function handleDeleteClick() {
+  function handleDeleteClick(commentId: string) {
     handleDelete(commentId);
   }
+
+  async function handleLike(commentId: string) {
+    await LikeToggleComment(commentId, {
+      onSuccess: () => {
+        invalidateComment();
+      },
+    });
+  }
+
+  useEffect(() => {
+    if (loggedInUserId) {
+      setIsLiked(likes.includes(loggedInUserId));
+    }
+  }, [likes]);
 
   return (
     <div
@@ -77,7 +103,7 @@ const Comment: React.FC<CommentProps> = ({
             } flex gap-2 items-center`}
           >
             {isEditing ? (
-              <button onClick={handleSaveClick}>
+              <button onClick={() => handleSaveClick(commentId, editContent)}>
                 <FiSave size={18} />
               </button>
             ) : (
@@ -86,7 +112,7 @@ const Comment: React.FC<CommentProps> = ({
                   <MdModeEditOutline size={18} />
                 </button>
 
-                <button onClick={handleDeleteClick}>
+                <button onClick={() => handleDeleteClick(commentId)}>
                   <MdOutlineDeleteOutline size={18} />
                 </button>
               </>
@@ -96,6 +122,7 @@ const Comment: React.FC<CommentProps> = ({
         <p className="text-xs  text-zinc-500  hover:text-white">
           <Link to={""}> @{username}</Link>
         </p>
+
         {isEditing ? (
           <div className="text-sm  w-full">
             <input
@@ -108,6 +135,14 @@ const Comment: React.FC<CommentProps> = ({
         ) : (
           <p className="text-sm mt-2">{content}</p>
         )}
+        <button
+          className="flex items-center gap-2 mt-3 "
+          onClick={() => handleLike(commentId)}
+        >
+          {isLiked ? <BiSolidLike size={20} /> : <BiLike size={20} />}
+
+          <span className="text-xs">{likes.length}</span>
+        </button>
       </div>
     </div>
   );

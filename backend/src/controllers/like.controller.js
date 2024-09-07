@@ -118,7 +118,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
       video: { $ne: null },
     }).populate({
       path: "video",
-      select: "title duration views thumbnail.url videoFile.url owner",
+      select: "title duration views thumbnail.url  owner",
       populate: {
         path: "owner",
         select: "username fullname avatar.url",

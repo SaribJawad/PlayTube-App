@@ -1,8 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 
-interface DeleteCommentResponse {
+interface Data {
+  _id: string;
+  content: string;
+  owner: string;
+  createdAt: string;
+  updateAt: string;
+  __v: number;
+}
+
+interface DeleteTweetResponse {
   statusCode: number;
-  data: string;
+  data: Data;
   message: string;
   success: boolean;
 }
@@ -11,10 +20,10 @@ interface ErrorResponse {
   message: string;
 }
 
-const useDeleteComment = () => {
-  return useMutation<DeleteCommentResponse, ErrorResponse, string>({
-    mutationFn: async (commentId) => {
-      const response = await fetch(`/api/v1/comments/c/${commentId}`, {
+const useDeleteTweet = () => {
+  return useMutation<DeleteTweetResponse, ErrorResponse, string>({
+    mutationFn: async (tweetId) => {
+      const response = await fetch(`/api/v1/tweets/${tweetId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -30,4 +39,4 @@ const useDeleteComment = () => {
   });
 };
 
-export default useDeleteComment;
+export default useDeleteTweet;

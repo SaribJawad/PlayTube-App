@@ -12,6 +12,7 @@ interface Comments {
       url: string;
     };
   };
+  likes: string[];
   createdAt: string;
 }
 

@@ -11,6 +11,7 @@ import PublicRoute from "./ui/PublicRoute";
 import SearchResultPage from "./pages/SearchResultPage";
 import VideoDetailPage from "./pages/VideoDetailPage";
 import ChannelPage from "./pages/ChannelPage";
+import LikedVideosPage from "./pages/LikedVideosPage";
 
 const App: React.FC = () => (
   <Routes>
@@ -22,7 +23,8 @@ const App: React.FC = () => (
       <Route path="/searchResult/:query" element={<SearchResultPage />} />
       <Route path="/videoView/:videoId" element={<VideoDetailPage />} />
       <Route path="/profile/:userId/:username" element={<ChannelPage />} />
-      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="likedVideos" element={<LikedVideosPage />} />
     </Route>
     <Route
       path="/auth"

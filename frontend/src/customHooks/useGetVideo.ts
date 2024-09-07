@@ -72,7 +72,6 @@ const useGetVideo = () => {
         }
         const data: VideoResponse = await response.json();
         dispatch(getVideoSuccess(data?.data));
-        console.log(data);
 
         return data;
       } catch (error) {

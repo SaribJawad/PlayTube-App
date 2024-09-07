@@ -41,6 +41,7 @@ const createTweet = asyncHandler(async (req, res) => {
         },
       },
     },
+
     {
       $project: {
         _id: 1,
@@ -56,7 +57,9 @@ const createTweet = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, aggregatedTweet, "Created tweet successfully"));
+    .json(
+      new ApiResponse(200, aggregatedTweet[0], "Created tweet successfully")
+    );
 });
 
 const getUserTweets = asyncHandler(async (req, res) => {
@@ -91,6 +94,11 @@ const getUserTweets = asyncHandler(async (req, res) => {
     },
     {
       $unwind: "$owner",
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
     },
     {
       $project: {

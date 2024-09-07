@@ -57,8 +57,36 @@ interface Video {
   createdAt: string;
 }
 
+interface LikedVideo {
+  _id: string;
+  thumbnail: {
+    url: string;
+  };
+  title: string;
+  duration: number;
+  views: string[];
+  owner: {
+    _id: string;
+    username: string;
+    fullname: string;
+    avatar: {
+      url: string;
+    };
+  };
+}
+
+interface LikedVideoObj {
+  _id: string;
+  video: LikedVideo;
+  likedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 interface VideoState {
   video: VideoFile | null;
+  likedVideos: LikedVideoObj[];
   allVideos: Video[];
   searchResults: Video[];
   channelVideos: Video[];
@@ -68,6 +96,7 @@ interface VideoState {
 
 const initialState: VideoState = {
   video: null,
+  likedVideos: [],
   allVideos: [],
   searchResults: [],
   channelVideos: [],
@@ -102,6 +131,11 @@ const videoSlice = createSlice({
       state.channelVideos = action.payload;
       state.error = null;
     },
+    LikedVideoSuccess: (state, action: PayloadAction<LikedVideoObj[]>) => {
+      state.loading = false;
+      state.likedVideos = action.payload;
+      state.error = null;
+    },
     videoFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
@@ -116,6 +150,7 @@ export const {
   channelVideosSuccess,
   videoFailure,
   getVideoSuccess,
+  LikedVideoSuccess,
 } = videoSlice.actions;
 
 export default videoSlice.reducer;

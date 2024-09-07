@@ -34,8 +34,18 @@ const getVideoComments = asyncHandler(async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "comment",
+        as: "likes",
+      },
+    },
+
+    {
       $addFields: {
         owner: { $arrayElemAt: ["$owner", 0] },
+        likes: "$likes.likedBy",
       },
     },
     {
@@ -52,6 +62,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         "owner.fullname": 1,
         "owner.avatar.url": 1,
         "owner._id": 1,
+        likes: 1,
       },
     },
   ])

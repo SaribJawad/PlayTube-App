@@ -8,7 +8,7 @@ const ChannelEmptyTweet: React.FC = () => {
   const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
 
   return (
-    <div className="flex justify-center flex-col items-center gap-4 pt-5 p-2">
+    <div className="flex justify-center flex-col items-center gap-4 pt-14 p-2">
       <span className="w-10 h-10 bg-red-700  flex items-center justify-center rounded-full ">
         <GoPeople />
       </span>
