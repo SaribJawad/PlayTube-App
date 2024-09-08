@@ -8,6 +8,7 @@ import { useAppSelector } from "../app/hooks";
 import { formatViews } from "../utils/formatViews";
 import { formatDate } from "../utils/formateDate";
 import useLikeToggleVideo from "../customHooks/useLikeToggleVideo";
+import { Link } from "react-router-dom";
 
 const VideoInfoPanel: React.FC = () => {
   const [isOpenDescription, setIsOpenDescription] = useState<boolean>(false);
@@ -25,7 +26,9 @@ const VideoInfoPanel: React.FC = () => {
       username: "",
       avatar: { url: "" },
       subscribers: 0,
+
       isSubscribed: false,
+      _id: "",
     },
     views = [],
   } = videoInfo || {};
@@ -65,11 +68,13 @@ const VideoInfoPanel: React.FC = () => {
       </div>
       <div id="profile-subscribebtn" className="flex justify-between">
         <div className="flex items-center gap-2">
-          <img
-            className="w-12 h-12 rounded-full"
-            src={owner.avatar.url}
-            alt=""
-          />
+          <Link to={`/profile/${owner._id}/${owner.username}`}>
+            <img
+              className="w-12 h-12 rounded-full"
+              src={owner.avatar.url}
+              alt=""
+            />
+          </Link>
           <div>
             <h2 className="text-md">{owner.username}</h2>
             <p className="text-xs text-zinc-500">

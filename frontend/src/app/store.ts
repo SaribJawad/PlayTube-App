@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import VideoReducer from "../features/video/videoSlice";
 import TweetReducer from "../features/Tweet/tweetSlice";
 import CommentReducer from "../features/comment/commentSlice";
+import ChannelsReducer from "../features/channels/channelsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     video: VideoReducer,
     comment: CommentReducer,
     tweet: TweetReducer,
+    channels: ChannelsReducer,
   },
 });
 

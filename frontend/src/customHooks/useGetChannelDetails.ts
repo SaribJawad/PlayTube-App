@@ -16,7 +16,7 @@ interface Data {
     public_id: string;
     _id: string;
   };
-  subscribersCount: number;
+  subscribers: string[];
   channelsSubscribedToCount: number;
   isSubscribed: boolean;
 }

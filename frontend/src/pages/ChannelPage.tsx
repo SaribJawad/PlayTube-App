@@ -6,6 +6,7 @@ import UserVideoSection from "../components/UserVideoSection";
 import useGetChannelDetails from "../customHooks/useGetChannelDetails";
 import ChannelNavigation from "../components/ChannelNavigation";
 import UserTweetSection from "../components/UserTweetSection";
+import UserSubscribedChannelSection from "../components/UserSubscribedChannelSection";
 
 const ChannelPage: React.FC = () => {
   const { userId, username } = useParams<{
@@ -40,7 +41,7 @@ const ChannelPage: React.FC = () => {
       <div className=" pt-4 bg-black sm:pb-0 pb-[70px]">
         {activeTab === "videos" && <UserVideoSection />}
         {activeTab === "tweets" && <UserTweetSection />}
-        {activeTab === "subscribed" && "subscribed"}
+        {activeTab === "subscribed" && <UserSubscribedChannelSection />}
         {activeTab === "playlists" && "playlist"}
       </div>
     </div>

@@ -21,7 +21,7 @@ interface ChannelDetail {
   channelsSubscribedToCount: number;
   email: string;
   isSubscribed: boolean;
-  subscribersCount: number;
+  subscribers: string[];
   username: string;
   _id: string;
 }
@@ -56,8 +56,8 @@ const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
             <h1 className="text-xl">{userDetails?.fullname}</h1>
             <p className="text-xs text-zinc-400">@{userDetails?.username}</p>
             <p className="text-xs text-zinc-400">
-              {userDetails && formatSubscribers(userDetails.subscribersCount)}{" "}
-              subscribers .{" "}
+              {userDetails && formatSubscribers(userDetails.subscribers.length)}{" "}
+              subscribers •{" "}
               {userDetails &&
                 formatSubscribers(userDetails.channelsSubscribedToCount)}{" "}
               subscribed
@@ -73,7 +73,7 @@ const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
             Edit
           </button>
         ) : (
-          <button className="button-animation px-3 py-[10px] flex items-center gap-2    bg-red-800">
+          <button className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800">
             <span>
               {userDetails?.isSubscribed ? (
                 <IoPersonAddSharp size={20} />
