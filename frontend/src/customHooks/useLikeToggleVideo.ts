@@ -45,6 +45,7 @@ const useLikeToggleVideo = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["video", videoId] });
+      queryClient.invalidateQueries({ queryKey: ["likedVideos"] });
     },
     onError: (error) => {
       console.error("Error toggling like:", error.message);

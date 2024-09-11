@@ -5,6 +5,9 @@ import { MdOutlineEdit } from "react-icons/md";
 import { formatViews as formatSubscribers } from "../utils/formatViews";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
+import useToggleSubscribe from "../customHooks/useToggleSubscribe";
+import { Flip, toast, ToastContainer } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ChannelDetail {
   avatar: {
@@ -21,7 +24,7 @@ interface ChannelDetail {
   channelsSubscribedToCount: number;
   email: string;
   isSubscribed: boolean;
-  subscribers: string[];
+  subscribersCount: number;
   username: string;
   _id: string;
 }
@@ -31,11 +34,41 @@ interface UserDetails {
 }
 
 const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
-  const { userId } = useParams<{ userId: string }>();
+  const queryClient = useQueryClient();
+  const { mutateAsync: toggleSubscribe, isPending } = useToggleSubscribe();
+  const { userId, username: channelUsername } = useParams<{
+    userId: string;
+    username: string;
+  }>();
   const loggedInUser = useAppSelector((state) => state.auth.user);
+
+  async function handleSubscribe() {
+    if (userId)
+      await toggleSubscribe(
+        { channelId: userId },
+        {
+          onSuccess: () => {
+            toast.success(
+              userDetails?.isSubscribed ? "UnSubscribed!" : "Subscribed!"
+            );
+            queryClient.invalidateQueries({
+              queryKey: ["channelDetails", channelUsername],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["subscribedChannel", userId],
+            });
+          },
+        }
+      );
+  }
 
   return (
     <div className="w-full h-auto  ">
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        transition={Flip}
+      />
       <img
         className="w-full h-[200px] object-cover"
         src={
@@ -56,7 +89,7 @@ const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
             <h1 className="text-xl">{userDetails?.fullname}</h1>
             <p className="text-xs text-zinc-400">@{userDetails?.username}</p>
             <p className="text-xs text-zinc-400">
-              {userDetails && formatSubscribers(userDetails.subscribers.length)}{" "}
+              {userDetails && formatSubscribers(userDetails.subscribersCount)}{" "}
               subscribers •{" "}
               {userDetails &&
                 formatSubscribers(userDetails.channelsSubscribedToCount)}{" "}
@@ -73,7 +106,10 @@ const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
             Edit
           </button>
         ) : (
-          <button className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800">
+          <button
+            onClick={handleSubscribe}
+            className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800"
+          >
             <span>
               {userDetails?.isSubscribed ? (
                 <IoPersonAddSharp size={20} />

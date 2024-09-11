@@ -392,7 +392,9 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
     {
       $addFields: {
-        subscribers: "$subscribers.subscriber",
+        subscribersCount: {
+          $size: "$subscribers",
+        },
         channelsSubscribedToCount: {
           $size: "$subscribedTo",
         },
@@ -409,7 +411,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       $project: {
         fullname: 1,
         username: 1,
-        subscribers: 1,
+        subscribersCount: 1,
         channelsSubscribedToCount: 1,
         isSubscribed: 1,
         avatar: 1,
@@ -437,12 +439,13 @@ const getWatchHistory = asyncHandler(async (req, res) => {
         _id: new mongoose.Types.ObjectId(req.user._id),
       },
     },
+
     {
       $lookup: {
         from: "videos",
         localField: "watchedHistory",
         foreignField: "_id",
-        as: "watchHistory",
+        as: "watchedHistory",
         pipeline: [
           {
             $lookup: {
@@ -455,7 +458,9 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                   $project: {
                     fullName: 1,
                     username: 1,
-                    avatar: 1,
+                    avatar: {
+                      url: 1,
+                    },
                   },
                 },
               ],
@@ -468,7 +473,24 @@ const getWatchHistory = asyncHandler(async (req, res) => {
               },
             },
           },
+          {
+            $project: {
+              title: 1,
+              description: 1,
+              thumbnail: {
+                url: 1,
+              },
+              owner: 1,
+              views: 1,
+              duration: 1,
+            },
+          },
         ],
+      },
+    },
+    {
+      $project: {
+        watchedHistory: 1,
       },
     },
   ]);

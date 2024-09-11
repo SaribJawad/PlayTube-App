@@ -215,8 +215,6 @@ const getVideoById = asyncHandler(async (req, res) => {
     );
   }
 
-  // await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } }, { new: true });
-
   // Aggregate to get video details
   const videoDetail = await Video.aggregate([
     {
@@ -284,11 +282,13 @@ const getVideoById = asyncHandler(async (req, res) => {
     },
   ]);
 
-  if (video.length === 0) {
+  if (videoDetail.length === 0) {
     throw new ApiError(500, "Invalid video ID");
   }
 
-  console.log(videoDetail, "fetched video");
+  await User.findByIdAndUpdate(userId, {
+    $addToSet: { watchedHistory: videoId },
+  });
 
   return res
     .status(200)

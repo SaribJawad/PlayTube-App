@@ -12,6 +12,8 @@ import SearchResultPage from "./pages/SearchResultPage";
 import VideoDetailPage from "./pages/VideoDetailPage";
 import ChannelPage from "./pages/ChannelPage";
 import LikedVideosPage from "./pages/LikedVideosPage";
+import ChannelSubscribersPage from "./pages/ChannelSubscribersPage";
+import WatchedHistoryPage from "./pages/WatchedHistoryPage";
 
 const App: React.FC = () => (
   <Routes>
@@ -25,6 +27,11 @@ const App: React.FC = () => (
       <Route path="/profile/:userId/:username" element={<ChannelPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="likedVideos" element={<LikedVideosPage />} />
+      <Route path="watchedHistory" element={<WatchedHistoryPage />} />
+      <Route
+        path="channelSubscribers/:channelId"
+        element={<ChannelSubscribersPage />}
+      />
     </Route>
     <Route
       path="/auth"

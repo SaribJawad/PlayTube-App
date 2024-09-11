@@ -4,6 +4,7 @@ import VideoReducer from "../features/video/videoSlice";
 import TweetReducer from "../features/Tweet/tweetSlice";
 import CommentReducer from "../features/comment/commentSlice";
 import ChannelsReducer from "../features/channels/channelsSlice";
+import WatchedHistoryReducer from "../features/watchedHistory/watchedHistorySlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     comment: CommentReducer,
     tweet: TweetReducer,
     channels: ChannelsReducer,
+    watchedHistory: WatchedHistoryReducer,
   },
 });
 

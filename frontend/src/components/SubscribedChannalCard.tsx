@@ -1,6 +1,10 @@
 import React from "react";
 import { formatViews } from "../utils/formatViews";
 import { useAppSelector } from "../app/hooks";
+import useToggleSubscribe from "../customHooks/useToggleSubscribe";
+import { Flip, toast, ToastContainer } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 interface SubscribedChannelCardProps {
   subscribedChannel: {
@@ -17,9 +21,35 @@ interface SubscribedChannelCardProps {
 const SubscribedChannalCard: React.FC<SubscribedChannelCardProps> = ({
   subscribedChannel,
 }) => {
+  const queryClient = useQueryClient();
+  const { mutateAsync: toggleSubscribe } = useToggleSubscribe();
+  const { userId, username: channelUsername } = useParams<{
+    userId: string;
+    username: string;
+  }>();
   const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
 
-  console.log(loggedInUserId, subscribedChannel.subscriberCount);
+  async function handleSubscribe() {
+    await toggleSubscribe(
+      { channelId: subscribedChannel?._id },
+      {
+        onSuccess: () => {
+          toast.success(
+            loggedInUserId &&
+              subscribedChannel.subscriberCount.includes(loggedInUserId)
+              ? "UnSubscribed!"
+              : "Subscribed!"
+          );
+          queryClient.invalidateQueries({
+            queryKey: ["channelDetails", channelUsername],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["subscribedChannel", userId],
+          });
+        },
+      }
+    );
+  }
 
   return (
     <div className="p-2 w-full h-[100px] border-b  border-zinc-800 flex items-center justify-between">
@@ -41,14 +71,20 @@ const SubscribedChannalCard: React.FC<SubscribedChannelCardProps> = ({
           </span>
         </div>
       </div>
-      {loggedInUserId &&
-      subscribedChannel.subscriberCount.includes(loggedInUserId) ? (
+
+      {loggedInUserId && loggedInUserId === subscribedChannel._id ? (
         <button className="button-animation px-3 py-[10px] flex items-center gap-2    bg-red-800">
           Edit
         </button>
       ) : (
-        <button className="button-animation px-3 py-[10px] flex items-center gap-2    bg-red-800">
-          Subscribe
+        <button
+          onClick={handleSubscribe}
+          className="button-animation px-3 py-[10px] flex items-center gap-2    bg-red-800"
+        >
+          {loggedInUserId &&
+          subscribedChannel.subscriberCount.includes(loggedInUserId)
+            ? "Subscribed"
+            : "Subscribe"}
         </button>
       )}
     </div>

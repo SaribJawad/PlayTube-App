@@ -4,56 +4,59 @@ import { useAppDispatch } from "../app/hooks";
 import {
   channelFailure,
   channelRequest,
-  subscribedChannelSucess,
+  channelSubscribersSuccess,
 } from "../features/channels/channelsSlice";
 
-interface Channel {
+interface Data {
   _id: string;
-  subscriber: string;
-  channel: {
+  subscriber: {
     _id: string;
     username: string;
     fullname: string;
     avatar: {
       url: string;
     };
-    subscriberCount: string[];
+    subscriberCount: number;
   };
 }
 
-interface GetUserSubscribedChannelResponse {
+interface GetChannelSubscribersResponse {
   statusCode: number;
-  data: Channel[];
+  data: Data[];
   message: string;
-  success: string;
+  success: boolean;
 }
 
 interface ErrorResponse {
   message: string;
 }
 
-function useGetUserSubscribedChannel() {
-  const { userId } = useParams<{ userId: string }>();
+function useGetChannelSubscribers() {
+  const { channelId } = useParams<{ channelId: string }>();
   const dispatch = useAppDispatch();
 
-  return useQuery<GetUserSubscribedChannelResponse, ErrorResponse>({
-    queryKey: ["subscribedChannel", userId],
+  return useQuery<GetChannelSubscribersResponse, ErrorResponse>({
+    queryKey: ["channelSubscribers", channelId],
     queryFn: async () => {
       dispatch(channelRequest());
-      const response = await fetch(`/api/v1/subscription/u/${userId}`);
+      const response = await fetch(`/api/v1/subscription/c/${channelId}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         dispatch(channelFailure(error.message));
         throw new Error(error.message);
       }
-      const data: GetUserSubscribedChannelResponse = await response.json();
-      dispatch(subscribedChannelSucess(data.data));
+      const data = await response.json();
+      dispatch(channelSubscribersSuccess(data.data));
       return data;
     },
-    enabled: !!userId,
+    enabled: !!channelId,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 }
 
-export default useGetUserSubscribedChannel;
+export default useGetChannelSubscribers;

@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAppDispatch } from "../app/hooks";
-import { LikedVideoSuccess } from "../features/video/videoSlice";
+import {
+  LikedVideoSuccess,
+  videoFailure,
+  videoRequest,
+} from "../features/video/videoSlice";
 
 interface Video {
   _id: string;
@@ -46,6 +50,7 @@ const useGetLikedVideos = () => {
     queryKey: ["likedVideos"],
     queryFn: async () => {
       try {
+        dispatch(videoRequest());
         const response = await fetch("/api/v1/likes/videos", {
           method: "GET",
           credentials: "include",
@@ -53,7 +58,7 @@ const useGetLikedVideos = () => {
 
         if (!response.ok) {
           const error: ErrorResponse = await response.json();
-
+          dispatch(videoFailure(error.message));
           throw new Error(error.message);
         }
         const data: GetLikedVideosResponse = await response.json();
@@ -62,12 +67,15 @@ const useGetLikedVideos = () => {
         return data;
       } catch (error) {
         if (error instanceof Error) {
+          dispatch(videoFailure(error.message));
           throw error;
         } else {
+          dispatch(videoFailure("Error while fetching liked videos"));
           throw "Error while fetching liked videos";
         }
       }
     },
+    staleTime: 3600000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

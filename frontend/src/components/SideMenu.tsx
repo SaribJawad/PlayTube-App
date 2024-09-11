@@ -7,8 +7,11 @@ import { BsCameraVideo } from "react-icons/bs";
 import { GoFileDirectory } from "react-icons/go";
 import { RiUserFollowLine } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
+import { useAppSelector } from "../app/hooks";
 
 const SideMenu: React.FC = () => {
+  const loggedInUser = useAppSelector((state) => state.auth.user?._id);
+
   return (
     <div className="w-[60px] hidden text-white lg:w-[250px] h-full bg-[#000000] border-r border-zinc-800 sm:flex flex-col justify-between fixed pt-20">
       <ul className="px-2 py-5 flex flex-col gap-3">
@@ -19,7 +22,7 @@ const SideMenu: React.FC = () => {
           label="Liked Videos"
         />
         <MenuItem
-          to=""
+          to="/watchedHistory"
           icon={<MdHistoryToggleOff size={25} />}
           label="History"
         />
@@ -30,7 +33,7 @@ const SideMenu: React.FC = () => {
           label="Collection"
         />
         <MenuItem
-          to=""
+          to={`/channelSubscribers/${loggedInUser}`}
           icon={<RiUserFollowLine size={25} />}
           label="Subscribers"
         />
