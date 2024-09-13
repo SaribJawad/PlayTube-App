@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface Video {
+  _id: string;
+}
+
 interface User {
   _id: string;
   username: string;
@@ -7,7 +11,7 @@ interface User {
   fullname: string;
   avatar: { url: string; public_id: string; _id: string };
   coverImage: { url: string; public_id: string; _id: string };
-  watchedHistory: string[];
+  watchedHistory: Video[];
   createdAt: string;
   updatedAt: string;
   __v: number;

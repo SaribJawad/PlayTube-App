@@ -18,7 +18,7 @@ import useDeleteTweet from "../customHooks/useDeleteTweet";
 const UserTweetSection: React.FC = () => {
   useGetUsersTweets();
   const queryClient = useQueryClient();
-  const tweets = useAppSelector((state) => state.tweet.allTweets);
+  const { allTweets, loading } = useAppSelector((state) => state.tweet);
   const [tweet, setTweet] = useState<string>("");
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const { userId } = useParams<{ userId: string }>();
@@ -78,6 +78,14 @@ const UserTweetSection: React.FC = () => {
     }
   }, [error]);
 
+  if (loading) {
+    return (
+      <div className=" w-full h-full flex items-center justify-center  ">
+        <LoadingSpinner width="8" height="8" />
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <ToastContainer
@@ -119,10 +127,10 @@ const UserTweetSection: React.FC = () => {
         </div>
       )}
       <div className="">
-        {tweets.length === 0 ? (
+        {allTweets.length === 0 ? (
           <ChannelEmptyTweet />
         ) : (
-          tweets.map((tweet) => (
+          allTweets.map((tweet) => (
             <TweetCard
               key={tweet._id}
               tweet={tweet}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoPersonAddOutline, IoPersonAddSharp } from "react-icons/io5";
 import { MdOutlineEdit } from "react-icons/md";
 
@@ -31,11 +31,17 @@ interface ChannelDetail {
 
 interface UserDetails {
   userDetails: ChannelDetail | undefined;
+  isEdit: boolean;
+  toggleEdit: () => void;
 }
 
-const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
+const ChannelHeader: React.FC<UserDetails> = ({
+  userDetails,
+  isEdit,
+  toggleEdit,
+}) => {
   const queryClient = useQueryClient();
-  const { mutateAsync: toggleSubscribe, isPending } = useToggleSubscribe();
+  const { mutateAsync: toggleSubscribe } = useToggleSubscribe();
   const { userId, username: channelUsername } = useParams<{
     userId: string;
     username: string;
@@ -99,11 +105,18 @@ const ChannelHeader: React.FC<UserDetails> = ({ userDetails }) => {
         </div>
 
         {userId === loggedInUser?._id ? (
-          <button className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800">
-            <span>
-              <MdOutlineEdit size={20} />
-            </span>
-            Edit
+          <button
+            onClick={toggleEdit}
+            className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800"
+          >
+            {isEdit ? (
+              "View Channel"
+            ) : (
+              <span className="flex  items-center gap-2">
+                <MdOutlineEdit size={20} />
+                Edit
+              </span>
+            )}
           </button>
         ) : (
           <button
