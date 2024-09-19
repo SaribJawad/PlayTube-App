@@ -116,8 +116,10 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     const likedVideos = await Like.find({
       likedBy: userId,
       video: { $ne: null },
+      // isPublished: true,
     }).populate({
       path: "video",
+      match: { isPublished: true },
       select: "title duration views thumbnail.url  owner",
       populate: {
         path: "owner",
@@ -125,10 +127,18 @@ const getLikedVideos = asyncHandler(async (req, res) => {
       },
     });
 
+    const publishedLikedVideos = likedVideos.filter(
+      (like) => like.video !== null
+    );
+
     return res
       .status(200)
       .json(
-        new ApiResponse(200, likedVideos, "Liked videos fetched successfully")
+        new ApiResponse(
+          200,
+          publishedLikedVideos,
+          "Liked videos fetched successfully"
+        )
       );
   } catch {
     throw new ApiError(500, "Error while fetching all the liked video");

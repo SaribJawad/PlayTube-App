@@ -3,7 +3,7 @@ import { MdModeEditOutline, MdOutlineDeleteOutline } from "react-icons/md";
 import { FiSave } from "react-icons/fi";
 
 import { Link } from "react-router-dom";
-import { formatDate } from "../utils/formateDate";
+import { formatDate } from "../utils/getTimeAgo";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import useLikeToggleComment from "../customHooks/useLikeToggleComment";
 import useGetVideoComments from "../customHooks/useGetVideoComments";

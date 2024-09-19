@@ -21,7 +21,6 @@ const Navbar: React.FC = () => {
   function handleSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    refetch();
 
     navigate(`/searchResult/${searchQuery.trim()}`);
     setSearchQuery("");

@@ -61,7 +61,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
     },
   ]);
 
-  res.status(200).json(new ApiResponse(200, channel));
+  res.status(200).json(new ApiResponse(200, channel[0]));
 });
 
 const getChannelVideos = asyncHandler(async (req, res) => {
@@ -70,6 +70,34 @@ const getChannelVideos = asyncHandler(async (req, res) => {
       {
         $match: {
           owner: req.user?._id,
+        },
+      },
+      {
+        $lookup: {
+          from: "likes",
+          localField: "_id",
+          foreignField: "video",
+          as: "likes",
+        },
+      },
+      {
+        $addFields: {
+          likes: {
+            $size: "$likes",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          isPublished: 1,
+          createdAt: 1,
+          likes: 1,
+          description: 1,
+          thumbnail: {
+            url: 1,
+          },
         },
       },
     ]);

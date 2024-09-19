@@ -3,6 +3,7 @@ import {
   useQueryClient,
   UseMutationResult,
 } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface Video {
   _id: string;
@@ -89,6 +90,7 @@ const usePublishVideo = (): UseMutationResult<
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["videos"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["ContentChannelVideos"] });
     },
   });
 };

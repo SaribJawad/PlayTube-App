@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import HomePage from "./pages/HomePage";
-import Dashboard from "./pages/DashboardPage";
 import AuthLayout from "./layouts/AuthLayout";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -14,6 +13,9 @@ import ChannelPage from "./pages/ChannelPage";
 import LikedVideosPage from "./pages/LikedVideosPage";
 import ChannelSubscribersPage from "./pages/ChannelSubscribersPage";
 import WatchedHistoryPage from "./pages/WatchedHistoryPage";
+import MyContentPage from "./pages/MyContentPage";
+import PlaylistDetailsPage from "./pages/PlaylistDetailsPage";
+import PlaylistPage from "./pages/PlaylistPage";
 
 const App: React.FC = () => (
   <Routes>
@@ -25,12 +27,18 @@ const App: React.FC = () => (
       <Route path="/searchResult/:query" element={<SearchResultPage />} />
       <Route path="/videoView/:videoId" element={<VideoDetailPage />} />
       <Route path="/profile/:userId/:username" element={<ChannelPage />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="likedVideos" element={<LikedVideosPage />} />
-      <Route path="watchedHistory" element={<WatchedHistoryPage />} />
+
+      <Route path="/likedVideos" element={<LikedVideosPage />} />
+      <Route path="/watchedHistory" element={<WatchedHistoryPage />} />
       <Route
-        path="channelSubscribers/:channelId"
+        path="/channelSubscribers/:channelId"
         element={<ChannelSubscribersPage />}
+      />
+      <Route path="/myContent" element={<MyContentPage />} />
+      <Route path="/playlist/:userId" element={<PlaylistPage />} />
+      <Route
+        path="/playlistDetails/:playlistId"
+        element={<PlaylistDetailsPage />}
       />
     </Route>
     <Route

@@ -11,7 +11,6 @@ const UserVideoSection: React.FC = () => {
 
   function handleClosePopup(): void {
     setIsOpenVideoModel((prev) => !prev);
-    console.log("asd");
   }
 
   if (loading) {

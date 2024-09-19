@@ -80,7 +80,6 @@ const useGetSearchVideos = () => {
     queryKey: ["searchedVideos", query],
     queryFn: () => fetchSearchedVideos(query),
     enabled: !!query,
-    staleTime: 1000 * 60 * 60,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

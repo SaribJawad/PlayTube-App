@@ -9,12 +9,12 @@ import UserTweetSection from "../components/UserTweetSection";
 import UserSubscribedChannelSection from "../components/UserSubscribedChannelSection";
 import LoadingSpinner from "../components/LoadingSpinner";
 import UserPersonalInformationSection from "../components/UserPersonalInformationSection";
-import { Flip, ToastContainer } from "react-toastify";
 import UserUpdatePasswordSection from "../components/UserUpdatePasswordSection";
+import UserPlaylistSection from "../components/UserPlaylistSection";
 
 const ChannelPage: React.FC = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const { userId, username } = useParams<{
+  const { userId } = useParams<{
     userId: string;
     username: string;
   }>();
@@ -36,7 +36,7 @@ const ChannelPage: React.FC = () => {
     | "changePassword"
   >("videos");
 
-  const { data, isLoading, error } = useGetChannelDetails();
+  const { data, isLoading } = useGetChannelDetails();
 
   const handleTabClick = (
     tab:
@@ -87,7 +87,7 @@ const ChannelPage: React.FC = () => {
           {activeTab === "videos" && <UserVideoSection />}
           {activeTab === "tweets" && <UserTweetSection />}
           {activeTab === "subscribed" && <UserSubscribedChannelSection />}
-          {activeTab === "playlists" && "playlist"}
+          {activeTab === "playlists" && <UserPlaylistSection />}
         </div>
       ) : (
         <div className=" pt-4 bg-black sm:pb-0 pb-[70px]">

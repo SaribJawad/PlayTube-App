@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
-import { formatDate } from "../utils/formateDate";
+import { formatDate } from "../utils/getTimeAgo";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 
 import { useAppSelector } from "../app/hooks";

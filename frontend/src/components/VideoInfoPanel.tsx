@@ -6,16 +6,37 @@ import { BiSolidLike } from "react-icons/bi";
 import { VscFileSymlinkDirectory } from "react-icons/vsc";
 import { useAppSelector } from "../app/hooks";
 import { formatViews } from "../utils/formatViews";
-import { formatDate } from "../utils/formateDate";
+import { formatDate } from "../utils/getTimeAgo";
 import useLikeToggleVideo from "../customHooks/useLikeToggleVideo";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import AddVideoToPlaylistPopup from "./AddVideoToPlaylistPopup";
+import useAddVideoToPlaylist from "../customHooks/useAddVideoToPlaylist";
+import { useQueryClient } from "@tanstack/react-query";
+import { MdFileDownloadDone } from "react-icons/md";
+
+import { toast } from "react-toastify";
+import useGetUsersPlaylist from "../customHooks/useGetUsersPlaylist";
 
 const VideoInfoPanel: React.FC = () => {
-  const [isOpenDescription, setIsOpenDescription] = useState<boolean>(false);
-  const videoInfo = useAppSelector((state) => state.video.video);
   const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
+  const { videoId } = useParams<{ videoId: string }>();
+  useGetUsersPlaylist(loggedInUserId);
+  const usersPlaylist = useAppSelector((state) => state.playlist.usersPlaylist);
+  const queryClient = useQueryClient();
+  const [isOpenDescription, setIsOpenDescription] = useState<boolean>(false);
+  const { mutateAsync: addVideoToPlaylist } = useAddVideoToPlaylist();
+  const videoInfo = useAppSelector((state) => state.video.video);
   const { mutate: likeToggleVideo } = useLikeToggleVideo();
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isOpenSaveVideoToPlaylist, setIsOpenSaveVideoToPlaylist] =
+    useState<boolean>(false);
+
+  const isVideoSaved = usersPlaylist.some((playlist) =>
+    playlist.videos?.some((video) => video._id === videoId)
+  );
+  const isOwner = usersPlaylist.some(
+    (playlist) => playlist.owner === loggedInUserId
+  );
 
   const {
     title = "",
@@ -46,6 +67,24 @@ const VideoInfoPanel: React.FC = () => {
     }
   }
 
+  function handleCloseAddVideoPopup() {
+    setIsOpenSaveVideoToPlaylist((prev) => !prev);
+  }
+
+  function handleSaveVideoToPlaylist(selectedPlaylist: string) {
+    addVideoToPlaylist(selectedPlaylist, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["usersPlaylist"],
+          exact: false,
+        });
+        setTimeout(() => {
+          toast.success("Video added to playlist!");
+        }, 500);
+      },
+    });
+  }
+
   return (
     <div id="Video-details" className=" flex flex-col gap-3 p-2">
       <div id="Video-tile-views-uploadetime ">
@@ -61,10 +100,20 @@ const VideoInfoPanel: React.FC = () => {
           <span className="text-sm">{likes.length}</span>
         </button>
 
-        <button className=" flex items-center gap-1">
-          <VscFileSymlinkDirectory size={25} />
-          <span className="text-sm">Save</span>
-        </button>
+        {isVideoSaved && isOwner ? (
+          <button className=" flex items-center gap-1">
+            <MdFileDownloadDone size={25} />
+            <span className="text-sm">Saved</span>
+          </button>
+        ) : (
+          <button
+            onClick={handleCloseAddVideoPopup}
+            className=" flex items-center gap-1"
+          >
+            <VscFileSymlinkDirectory size={25} />
+            <span className="text-sm">Save</span>
+          </button>
+        )}
       </div>
       <div id="profile-subscribebtn" className="flex justify-between">
         <div className="flex items-center gap-2">
@@ -103,6 +152,12 @@ const VideoInfoPanel: React.FC = () => {
           {isOpenDescription ? "Hide description" : "Show description"}
         </button>
       </div>
+      {isOpenSaveVideoToPlaylist && (
+        <AddVideoToPlaylistPopup
+          handleClosePopup={handleCloseAddVideoPopup}
+          handleSave={handleSaveVideoToPlaylist}
+        />
+      )}
     </div>
   );
 };

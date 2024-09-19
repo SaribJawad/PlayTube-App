@@ -28,10 +28,32 @@ interface ChannelSubscribers {
   channel: string;
 }
 
+interface ChannelStats {
+  _id: string;
+  totalViews: number;
+  totalVideos: number;
+  totalSubscribers: number;
+  totalLikes: number;
+}
+
+interface ContentChannelVideo {
+  _id: string;
+  thumbnail: {
+    url: string;
+  };
+  title: string;
+  description: string;
+  isPublished: boolean;
+  createdAt: string;
+  likes: number;
+}
+
 interface InitialState {
   loading: boolean;
   subscribedChannel: Channel[];
   channelSubscribers: ChannelSubscribers[];
+  channelStats: ChannelStats | null;
+  myContentChannelVideos: ContentChannelVideo[];
   error: string | null;
 }
 
@@ -39,6 +61,8 @@ const initialState: InitialState = {
   loading: false,
   subscribedChannel: [],
   channelSubscribers: [],
+  channelStats: null,
+  myContentChannelVideos: [],
   error: null,
 };
 
@@ -62,6 +86,19 @@ const channelsSlice = createSlice({
       state.channelSubscribers = action.payload;
       state.error = null;
     },
+    channelStatsSuccess: (state, action: PayloadAction<ChannelStats>) => {
+      state.loading = false;
+      state.channelStats = action.payload;
+      state.error = null;
+    },
+    myContentChannelVideo: (
+      state,
+      action: PayloadAction<ContentChannelVideo[]>
+    ) => {
+      state.loading = false;
+      state.myContentChannelVideos = action.payload;
+      state.error = null;
+    },
     channelFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
@@ -74,6 +111,8 @@ export const {
   subscribedChannelSucess,
   channelFailure,
   channelSubscribersSuccess,
+  channelStatsSuccess,
+  myContentChannelVideo,
 } = channelsSlice.actions;
 
 export default channelsSlice.reducer;

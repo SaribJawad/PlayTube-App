@@ -30,9 +30,43 @@ const createPlaylist = asyncHandler(async (req, res) => {
 const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
-  const userPlaylist = await Playlist.find({
-    owner: userId,
-  });
+  const userPlaylist = await Playlist.aggregate([
+    {
+      $match: {
+        owner: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+      },
+    },
+    {
+      $addFields: {
+        videoCount: {
+          $size: "$videos",
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        description: 1,
+        videos: {
+          _id: 1,
+          thumbnail: 1,
+        },
+        videoCount: 1,
+        updatedAt: 1,
+        createdAt: 1,
+        owner: 1,
+      },
+    },
+  ]);
 
   if (!userPlaylist) {
     throw new ApiError(500, "Error while fetching user's playlist");
@@ -48,9 +82,109 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 const getPlaylistById = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
 
-  const playlist = await Playlist.find({
-    _id: playlistId,
-  });
+  const playlist = await Playlist.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(playlistId),
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    username: 1,
+                    fullname: 1,
+                    avatar: {
+                      url: 1,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: {
+              path: "$owner",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $addFields: {
+              views: {
+                $size: "$views",
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              fullname: 1,
+              avatar: {
+                url: 1,
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$owner",
+    },
+    {
+      $addFields: {
+        videoCount: {
+          $size: "$videos",
+        },
+      },
+    },
+    {
+      $project: {
+        videos: {
+          _id: 1,
+          thumbnail: {
+            url: 1,
+          },
+          title: 1,
+          description: 1,
+          views: 1,
+          duration: 1,
+          owner: 1,
+          createdAt: 1,
+          playlist: 1,
+        },
+        name: 1,
+        description: 1,
+        videoCount: 1,
+        createdAt: 1,
+        owner: 1,
+      },
+    },
+  ]);
 
   if (playlist.length === 0) {
     throw new ApiError(500, "Error while fetching playlist");
@@ -58,7 +192,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, playlist, "Playlist fetched successfully"));
+    .json(new ApiResponse(200, playlist[0], "Playlist fetched successfully"));
 });
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
@@ -74,8 +208,8 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
     }
   );
 
-  if (!playlist || playlist.length === 0) {
-    throw new ApiError(500, "Error while adding video to the playlist");
+  if (!playlist) {
+    throw new ApiError(404, "Playlist not found");
   }
 
   res

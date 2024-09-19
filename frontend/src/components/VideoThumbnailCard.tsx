@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { formateDuration } from "../utils/formatDuration";
 import { formatViews } from "../utils/formatViews";
-import { formatDate } from "../utils/formateDate";
+import { formatDate } from "../utils/getTimeAgo";
+import { useAppSelector } from "../app/hooks";
 
 interface Video {
   _id: string;

@@ -23,7 +23,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
   const limitNumber = parseInt(limit, 10);
   const sortDirection = sortType === "asc" ? 1 : -1;
 
-  const filter = [];
+  const filter = [
+    {
+      $match: {
+        isPublished: true,
+      },
+    },
+  ];
 
   if (query) {
     filter.push({
@@ -85,6 +91,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     {
       $project: {
         _id: 1,
+        isPublished: 1,
         thumbnail: 1,
         title: 1,
         duration: 1,
@@ -298,11 +305,11 @@ const getVideoById = asyncHandler(async (req, res) => {
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const { title, description } = req.body;
-  const thumbnailLocalPath = req.file?.path;
+  const thumbnailLocalPath = req.file?.thumbnail?.path;
 
   const currentVideo = await Video.findById(videoId);
 
-  if (currentVideo?.owner.toString != req.user?._id) {
+  if (currentVideo?.owner.toString() != req.user?._id) {
     throw new ApiError(
       400,
       "You can't update video as you are not owner of this video"
@@ -382,15 +389,10 @@ const deleteVideo = asyncHandler(async (req, res) => {
     );
   }
 
-  // removing video history data
-  await User.updateMany({
-    watchedHistory: {
-      $in: [videoId],
-    },
-    $pull: {
-      watchedHistory: videoId,
-    },
-  });
+  await User.updateMany(
+    { watchedHistory: { $in: [videoId] } },
+    { $pull: { watchedHistory: videoId } }
+  );
 
   const videoFile = currentVideo.videoFile.public_id;
   const thumbnailFile = currentVideo.thumbnail.public_id;
@@ -401,7 +403,6 @@ const deleteVideo = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while deleting the video");
   }
 
-  // delete files from cloudinary
   try {
     await deleteFromCloudinary(videoFile, "video");
     await deleteFromCloudinary(thumbnailFile);
@@ -411,7 +412,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, deleteVideo, "Video deleted successfully"));
+    .json(new ApiResponse(200, deletedVideo, "Video deleted successfully"));
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {

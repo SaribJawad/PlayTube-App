@@ -26,11 +26,15 @@ const SideMenu: React.FC = () => {
           icon={<MdHistoryToggleOff size={25} />}
           label="History"
         />
-        <MenuItem to="" icon={<BsCameraVideo size={25} />} label="My Content" />
         <MenuItem
-          to=""
+          to="/myContent"
+          icon={<BsCameraVideo size={25} />}
+          label="My Content"
+        />
+        <MenuItem
+          to={`/playlist/${loggedInUser}`}
           icon={<GoFileDirectory size={25} />}
-          label="Collection"
+          label="Playlist"
         />
         <MenuItem
           to={`/channelSubscribers/${loggedInUser}`}

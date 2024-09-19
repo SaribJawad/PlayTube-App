@@ -30,12 +30,13 @@ const LikedVideosPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 mt-5">
-        {likedVideos.map((likedVideo) => (
-          <LikedVideoThumbnailCard
-            key={likedVideo.video._id}
-            video={likedVideo.video}
-          />
-        ))}
+        {likedVideos &&
+          likedVideos.map((likedVideo) => (
+            <LikedVideoThumbnailCard
+              key={likedVideo._id}
+              video={likedVideo.video}
+            />
+          ))}
       </div>
     </div>
   );

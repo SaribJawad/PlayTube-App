@@ -6,12 +6,21 @@ import VideoDisplay from "../components/VideoDisplay";
 import VideoInfoPanel from "../components/VideoInfoPanel";
 import CommentPanel from "../components/CommentPanel";
 import useGetVideo from "../customHooks/useGetVideo";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const VideoDetailPage: React.FC = () => {
   useGetAllVideos({ page: 1, limit: 10, sortBy: "createdAt", sortType: "asc" });
-  useGetVideo();
+  const { isLoading } = useGetVideo();
 
   const recommendedVideo = useAppSelector((state) => state.video.allVideos);
+
+  if (isLoading) {
+    return (
+      <div className=" w-full flex items-center justify-center min-h-full  sm:pl-[70px] lg:pl-[260px]">
+        <LoadingSpinner width="8" height="8" />
+      </div>
+    );
+  }
 
   return (
     <div className="pt-20 p-2 bg-black text-white min-h-full w-full sm:pl-[60px] lg:pl-[255px]  sm:pb-0 pb-[70px]  flex customVideoView:flex-row flex-col lg:gap-3 ">

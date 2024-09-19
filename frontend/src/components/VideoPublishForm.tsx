@@ -3,7 +3,6 @@ import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import usePublishVideo from "../customHooks/usePublishVideo";
-import LoadingSpinner from "./LoadingSpinner";
 import { Flip, toast, ToastContainer } from "react-toastify";
 
 interface FormValues {
@@ -83,6 +82,10 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
 
     if (error) {
       toast.error(error.message);
+    } else {
+      setTimeout(() => {
+        toast.success("Video uploaded successfully");
+      }, 500);
     }
 
     if (status === "idle") {
@@ -236,9 +239,11 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
       <button
         disabled={isPending}
         type="submit"
-        className="button-animation px-3  py-[10px] flex items-center justify-center gap-2  mx-auto  bg-red-800 w-60 mt-5 text-sm "
+        className={`button-animation px-3  py-[10px] flex items-center justify-center gap-2  mx-auto  bg-red-800 w-60 mt-5 text-sm ${
+          isPending && "cursor-wait"
+        }`}
       >
-        {isPending ? <LoadingSpinner width="6" height="6" /> : "Submit"}
+        {isPending ? "Uploading..." : "Submit"}
       </button>
     </form>
   );
