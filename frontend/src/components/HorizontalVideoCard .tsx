@@ -36,11 +36,13 @@ interface Video {
 interface VideoThumbnailCard {
   video: Video;
   playlistId?: string;
+  ownerId?: string;
 }
 
 const HorizontalVideoCard: React.FC<VideoThumbnailCard> = ({
   video,
   playlistId,
+  ownerId,
 }) => {
   const {
     _id: videoId,
@@ -51,7 +53,7 @@ const HorizontalVideoCard: React.FC<VideoThumbnailCard> = ({
     duration,
     createdAt,
     owner: {
-      _id: ownerId,
+      _id: videoOwnerId,
       username,
       avatar: { url: avatarUrl },
     },

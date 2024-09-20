@@ -154,7 +154,7 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
         />
         <label
           htmlFor="fileUpload"
-          className="button-animation px-3  py-[10px] flex items-center justify-center gap-2    bg-red-800 w-60 "
+          className=" flex items-center justify-center gap-2   button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 w-auto sm:m-0  "
         >
           Choose Video File
         </label>
@@ -183,7 +183,7 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
               />
               <label
                 htmlFor="thumbnailUpload"
-                className="button-animation px-3  py-[10px] flex items-center justify-center gap-2    bg-red-800 w-60 "
+                className="flex items-center justify-center gap-2   button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300  w-60"
               >
                 Choose Thumbnail
               </label>
@@ -239,7 +239,7 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
       <button
         disabled={isPending}
         type="submit"
-        className={`button-animation px-3  py-[10px] flex items-center justify-center gap-2  mx-auto  bg-red-800 w-60 mt-5 text-sm ${
+        className={` flex items-center justify-center gap-2  mx-auto button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300   mt-4 ${
           isPending && "cursor-wait"
         }`}
       >

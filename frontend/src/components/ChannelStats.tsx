@@ -24,7 +24,7 @@ const ChannelStats: React.FC = () => {
       <div className="w-full  h-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 p-2 gap-4">
         {/* details box */}
         <div className="h-auto md:h-[180px] border border-zinc-700 p-5 flex flex-row md:flex-col md:items-start items-center justify-between">
-          <div className="bg-red-700 w-10 h-10  flex items-center justify-center rounded-full">
+          <div className=" bg-red-700 w-10 h-10  flex items-center justify-center rounded-full">
             <FiEye size={25} />
           </div>
           <div className="flex flex-col items-end md:items-start">
@@ -35,7 +35,7 @@ const ChannelStats: React.FC = () => {
           </div>
         </div>
         <div className="h-auto md:h-[180px] border border-zinc-700 p-5 flex flex-row md:flex-col md:items-start items-center justify-between">
-          <div className="bg-red-700 w-10 h-10  flex items-center justify-center rounded-full">
+          <div className=" bg-red-700 w-10 h-10  flex items-center justify-center rounded-full">
             <GoPerson size={25} />
           </div>
           <div className="flex flex-col items-end md:items-start">
@@ -46,7 +46,7 @@ const ChannelStats: React.FC = () => {
           </div>
         </div>
         <div className="h-auto md:h-[180px] border border-zinc-700 p-5 flex flex-row md:flex-col md:items-start items-center justify-between">
-          <div className="bg-red-700 w-10 h-10  flex items-center justify-center rounded-full">
+          <div className=" bg-red-700 w-10 h-10  flex items-center justify-center rounded-full">
             <BiLike size={25} />
           </div>
           <div className="flex flex-col items-end md:items-start">

@@ -73,13 +73,13 @@ const SubscribedChannalCard: React.FC<SubscribedChannelCardProps> = ({
       </div>
 
       {loggedInUserId && loggedInUserId === subscribedChannel._id ? (
-        <button className="button-animation px-3 py-[10px] flex items-center gap-2    bg-red-800">
-          Edit
+        <button className=" flex items-center gap-2    button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300">
+          View Channel
         </button>
       ) : (
         <button
           onClick={handleSubscribe}
-          className="button-animation px-3 py-[10px] flex items-center gap-2    bg-red-800"
+          className="flex items-center gap-2     button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300"
         >
           {loggedInUserId &&
           subscribedChannel.subscriberCount.includes(loggedInUserId)

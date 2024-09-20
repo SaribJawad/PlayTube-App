@@ -16,17 +16,21 @@ import { MdFileDownloadDone } from "react-icons/md";
 
 import { toast } from "react-toastify";
 import useGetUsersPlaylist from "../customHooks/useGetUsersPlaylist";
+import useGetChannelSubscribers from "../customHooks/useGetChannelSubscribers";
+import useToggleSubscribe from "../customHooks/useToggleSubscribe";
 
 const VideoInfoPanel: React.FC = () => {
-  const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
-  const { videoId } = useParams<{ videoId: string }>();
-  useGetUsersPlaylist(loggedInUserId);
-  const usersPlaylist = useAppSelector((state) => state.playlist.usersPlaylist);
   const queryClient = useQueryClient();
-  const [isOpenDescription, setIsOpenDescription] = useState<boolean>(false);
-  const { mutateAsync: addVideoToPlaylist } = useAddVideoToPlaylist();
+  const { videoId } = useParams<{ videoId: string }>();
+  const loggedInUserId = useAppSelector((state) => state.auth.user?._id);
   const videoInfo = useAppSelector((state) => state.video.video);
+  useGetUsersPlaylist(loggedInUserId);
+  useGetChannelSubscribers(videoInfo?.owner?._id);
+  const { mutateAsync: addVideoToPlaylist } = useAddVideoToPlaylist();
   const { mutate: likeToggleVideo } = useLikeToggleVideo();
+  const { mutateAsync: toggleSubscribe } = useToggleSubscribe();
+  const usersPlaylist = useAppSelector((state) => state.playlist.usersPlaylist);
+  const [isOpenDescription, setIsOpenDescription] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isOpenSaveVideoToPlaylist, setIsOpenSaveVideoToPlaylist] =
     useState<boolean>(false);
@@ -54,19 +58,6 @@ const VideoInfoPanel: React.FC = () => {
     views = [],
   } = videoInfo || {};
 
-  useEffect(() => {
-    if (loggedInUserId) {
-      setIsLiked(likes.includes(loggedInUserId));
-    }
-  }, [likes, loggedInUserId]);
-
-  function handleLike() {
-    likeToggleVideo();
-    if (loggedInUserId) {
-      setIsLiked(likes.includes(loggedInUserId) ? false : true);
-    }
-  }
-
   function handleCloseAddVideoPopup() {
     setIsOpenSaveVideoToPlaylist((prev) => !prev);
   }
@@ -83,6 +74,42 @@ const VideoInfoPanel: React.FC = () => {
         }, 500);
       },
     });
+  }
+
+  async function handleSubscribe() {
+    const channelId = videoInfo?.owner._id;
+    if (channelId) {
+      await toggleSubscribe(
+        { channelId },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["channelSubscribers"],
+              exact: false,
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["video", videoId],
+              exact: false,
+            });
+
+            toast.success(owner.isSubscribed ? "Unsubscribed" : "Subscribed!");
+          },
+        }
+      );
+    }
+  }
+
+  useEffect(() => {
+    if (loggedInUserId) {
+      setIsLiked(likes.includes(loggedInUserId));
+    }
+  }, [likes, loggedInUserId]);
+
+  function handleLike() {
+    likeToggleVideo();
+    if (loggedInUserId) {
+      setIsLiked(likes.includes(loggedInUserId) ? false : true);
+    }
   }
 
   return (
@@ -115,7 +142,10 @@ const VideoInfoPanel: React.FC = () => {
           </button>
         )}
       </div>
-      <div id="profile-subscribebtn" className="flex justify-between">
+      <div
+        id="profile-subscribebtn"
+        className="flex items-center justify-between"
+      >
         <div className="flex items-center gap-2">
           <Link to={`/profile/${owner._id}/${owner.username}`}>
             <img
@@ -131,10 +161,22 @@ const VideoInfoPanel: React.FC = () => {
             </p>
           </div>
         </div>
-        <button className="flex items-center gap-1">
-          <IoPersonAddOutline size={25} />
-          <span className="text-sm">Subscribe</span>
-        </button>
+        {videoInfo?.owner._id === loggedInUserId ? (
+          <Link
+            to={`/profile/${videoInfo?.owner._id}/${videoInfo?.owner.username}`}
+          >
+            <button className="button-animation px-5 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 ">
+              View Channel
+            </button>
+          </Link>
+        ) : (
+          <button
+            onClick={handleSubscribe}
+            className="button-animation px-5 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300"
+          >
+            {owner.isSubscribed ? "Unsubscribe" : "Subscribe"}
+          </button>
+        )}
       </div>
       <div
         id="description"

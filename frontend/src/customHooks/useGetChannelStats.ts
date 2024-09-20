@@ -39,7 +39,6 @@ const useGetChannelStats = () => {
       if (!response.ok) {
         const error: ErrorResposnse = await response.json();
         dispatch(channelFailure(error.message));
-        console.log(error);
 
         throw new Error(error.message);
       }

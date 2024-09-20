@@ -23,7 +23,7 @@ const MyContentPageHeader: React.FC = () => {
       </div>
       <button
         onClick={handleClosePopup}
-        className="button-animation px-3 py-[10px] flex items-center gap-2 text-center sm:w-auto w-full      bg-red-800"
+        className=" flex items-center gap-2  sm:w-auto w-full button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300      "
       >
         <span>
           <GoPlus size={20} />

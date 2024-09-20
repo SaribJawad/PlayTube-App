@@ -120,7 +120,7 @@ const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({
           <button
             type="submit"
             disabled={isPending}
-            className={`button-animation px-3 py-[10px] text-center bg-red-800 w-full mt-2 ${
+            className={`  button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 mt-2 ${
               isPending && "cursor-wait"
             } `}
           >

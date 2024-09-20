@@ -146,7 +146,7 @@ const EditVideoPopup: React.FC<EditVidepPopupProps> = ({ video, onClose }) => {
 
           <button
             type="button"
-            className="button-animation px-3 py-[10px] flex items-center justify-center gap-2 mx-auto bg-red-800 w-60 mt-5 text-sm"
+            className=" flex items-center justify-center gap-2  w-auto mt-5 button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 mx-auto text-md"
             onClick={handleSubmit}
           >
             Update

@@ -33,7 +33,7 @@ const SubscriberChannelCard: React.FC<SubscriberChannelCardProps> = ({
           </span>
         </div>
       </div>
-      <button className="button-animation px-3 py-[10px]     bg-red-800">
+      <button className=" button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300">
         <Link to={`/profile/${subscriber._id}/${subscriber.username}`}>
           View Channel
         </Link>

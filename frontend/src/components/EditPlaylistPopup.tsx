@@ -132,7 +132,7 @@ const EditPlaylistPopup: React.FC<EditPlaylistPopupProps> = ({
 
           <button
             type="submit"
-            className={`button-animation px-3 py-[10px] text-center bg-red-800 w-full mt-2 ${
+            className={` button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 w-auto mt-2 ${
               isPending ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isPending}

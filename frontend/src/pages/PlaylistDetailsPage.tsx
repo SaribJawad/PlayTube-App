@@ -81,6 +81,7 @@ const PlaylistDetailsPage: React.FC = () => {
             video={video}
             key={video._id}
             playlistId={playlistId}
+            ownerId={owner._id}
           />
         ))}
       </div>

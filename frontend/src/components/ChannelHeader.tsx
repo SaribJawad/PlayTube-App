@@ -107,7 +107,8 @@ const ChannelHeader: React.FC<UserDetails> = ({
         {userId === loggedInUser?._id ? (
           <button
             onClick={toggleEdit}
-            className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800"
+            // button-animation px-5 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300
+            className="button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 gap-2 self-end sm:self-auto  "
           >
             {isEdit ? (
               "View Channel"
@@ -121,7 +122,7 @@ const ChannelHeader: React.FC<UserDetails> = ({
         ) : (
           <button
             onClick={handleSubscribe}
-            className="button-animation px-3 py-[10px] flex items-center gap-2 self-end sm:self-auto    bg-red-800"
+            className="button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300  flex items-center gap-2 self-end sm:self-auto   "
           >
             <span>
               {userDetails?.isSubscribed ? (

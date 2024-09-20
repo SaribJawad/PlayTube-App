@@ -31,8 +31,9 @@ interface ErrorResponse {
   message: string;
 }
 
-function useGetChannelSubscribers() {
-  const { channelId } = useParams<{ channelId: string }>();
+function useGetChannelSubscribers(passedChannelId?: string) {
+  const { channelId: paramChannelId } = useParams<{ channelId: string }>();
+  const channelId = paramChannelId || passedChannelId;
   const dispatch = useAppDispatch();
 
   return useQuery<GetChannelSubscribersResponse, ErrorResponse>({
@@ -51,6 +52,7 @@ function useGetChannelSubscribers() {
       }
       const data = await response.json();
       dispatch(channelSubscribersSuccess(data.data));
+
       return data;
     },
     enabled: !!channelId,

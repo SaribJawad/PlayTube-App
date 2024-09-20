@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
     <nav className="z-10 w-screen border-b border-zinc-800 fixed h-20 bg-black text-white flex items-center justify-between px-4">
       <Link to={""}>
         <h1 className="text-center md:text-[23px] text-[20px] font-bold font-Montserrat mx-3">
-          Play<span className="text-red-700">Tube</span>
+          Play<span className="text-red-600">Tube</span>
         </h1>
       </Link>
 

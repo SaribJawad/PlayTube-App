@@ -55,7 +55,9 @@ const UserTweetSection: React.FC = () => {
           queryClient.invalidateQueries({
             queryKey: ["tweets", loggedInUserId],
           });
-          toast.success("Tweet updated successfully");
+          setTimeout(() => {
+            toast.success("Tweet updated successfully");
+          }, 500);
         },
       }
     );
@@ -109,7 +111,7 @@ const UserTweetSection: React.FC = () => {
             </button>
             <button
               onClick={() => handleTweetUpload(tweet)}
-              className="button-animation px-3 py-[5px] flex items-center gap-2    bg-red-800"
+              className=" flex items-center gap-2     button-animation px-3 py-1  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300"
             >
               {isPending ? "Uploading..." : "Tweet"}
             </button>
