@@ -66,7 +66,9 @@ const VideoPublishForm: React.FC<VideoPublishFormProps> = ({
     error,
     status,
   } = usePublishVideo();
+
   const [isDragging, setIsDragging] = useState(false);
+
   const {
     control,
     handleSubmit,

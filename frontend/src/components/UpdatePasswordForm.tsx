@@ -64,7 +64,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
           <p className="text-red-500 text-sm">{errors.newPassword.message}</p>
         )}
         <button
-          className="button-animation px-2 py-[8px] flex items-center gap-2 self-end mt-8 bg-red-800"
+          className=" items-center gap-2 self-end mt-8 button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300"
           type="submit"
         >
           Save changes
