@@ -45,7 +45,6 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.loading = false;
       state.error = null;
-      localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("user", JSON.stringify(action.payload));
     },
     loginFailure: (state, action: PayloadAction<string>) => {
@@ -55,24 +54,35 @@ const authSlice = createSlice({
     signupRequest: (state) => {
       state.loading = true;
     },
+    authStatusSuccess: (state, action: PayloadAction<boolean>) => {
+      state.loading = false;
+      state.error = null;
+      state.isAuthenticated = action.payload;
+    },
     signupSuccess: (state, action: PayloadAction<User>) => {
       state.isAuthenticated = true;
       state.loading = false;
       state.user = action.payload;
       state.error = null;
-      localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("user", JSON.stringify(action.payload));
     },
     signupFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
-    logout: (state) => {
+    logoutRequest: (state) => {
+      state.loading = true;
+    },
+    logoutSuccess: (state) => {
       state.loading = false;
       state.user = null;
       state.error = null;
       localStorage.removeItem("isAuthenticated");
       localStorage.removeItem("user");
+    },
+    logoutFailure: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
+      state.loading = false;
     },
   },
 });
@@ -84,7 +94,10 @@ export const {
   signupFailure,
   signupRequest,
   signupSuccess,
-  logout,
+  authStatusSuccess,
+  logoutSuccess,
+  logoutRequest,
+  logoutFailure,
 } = authSlice.actions;
 
 export default authSlice.reducer;

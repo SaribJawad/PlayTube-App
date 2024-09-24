@@ -2,9 +2,9 @@ import React from "react";
 import { formatViews } from "../utils/formatViews";
 import { useAppSelector } from "../app/hooks";
 import useToggleSubscribe from "../customHooks/useToggleSubscribe";
-import { Flip, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface SubscribedChannelCardProps {
   subscribedChannel: {
@@ -51,6 +51,10 @@ const SubscribedChannalCard: React.FC<SubscribedChannelCardProps> = ({
     );
   }
 
+  console.log(
+    `/profile/${subscribedChannel?._id}/{${subscribedChannel?.username}`
+  );
+
   return (
     <div className="p-2 w-full h-[100px] border-b  border-zinc-800 flex items-center justify-between">
       <div className="flex items-center gap-2">
@@ -73,9 +77,13 @@ const SubscribedChannalCard: React.FC<SubscribedChannelCardProps> = ({
       </div>
 
       {loggedInUserId && loggedInUserId === subscribedChannel._id ? (
-        <button className=" flex items-center gap-2    button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300">
-          View Channel
-        </button>
+        <Link
+          to={`/profile/${subscribedChannel?._id}/${subscribedChannel?.username}`}
+        >
+          <button className=" flex items-center gap-2    button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300">
+            View Channel
+          </button>
+        </Link>
       ) : (
         <button
           onClick={handleSubscribe}

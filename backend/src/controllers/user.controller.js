@@ -510,6 +510,10 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     );
 });
 
+const checkAuth = asyncHandler(async (req, res) => {
+  return res.status(200).json(new ApiResponse(200, { isAuthenticated: true }));
+});
+
 export {
   registerUser,
   loginUser,
@@ -522,4 +526,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  checkAuth,
 };

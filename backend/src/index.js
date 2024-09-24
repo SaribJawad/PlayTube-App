@@ -7,9 +7,23 @@ dotenv.config({
   path: "./.env",
 });
 
-connectDB().catch((error) => {
-  console.log("MONGODB connection failed !!! ", error);
-});
+connectDB()
+  .then(() => {
+    app.on("error", (error) => {
+      console.log("ERROR: ", error);
+      throw error;
+    });
+    app.listen(process.env.PORT || 8000, () => {
+      console.log(`Server is running at port: ${process.env.PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log("MONGODB connection failed !!! ", error);
+  });
+
+// connectDB().catch((error) => {
+//   console.log("MONGODB connection failed !!! ", error);
+// });
 
 // Error-handling middleware
 app.use((err, req, res, next) => {

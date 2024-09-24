@@ -20,16 +20,15 @@ const Slider: React.FC<SliderProps> = ({ isOpen, toggleMenu }) => {
         <IoCloseOutline onClick={toggleMenu} fontFamily="thin" size={35} />
       </span>
       <ul className="w-full flex flex-col gap-4">
-        <SliderItem to="" icon={<BiLike size={25} />} label="Liked Videos" />
         <SliderItem
-          to=""
-          icon={<BsCameraVideo size={25} />}
-          label="My Content"
+          to="/likedVideos"
+          icon={<BiLike size={25} />}
+          label="Liked Videos"
         />
         <SliderItem
-          to=""
-          icon={<IoSettingsOutline size={25} />}
-          label="Settings"
+          to="/myContent"
+          icon={<BsCameraVideo size={25} />}
+          label="My Content"
         />
       </ul>
     </div>

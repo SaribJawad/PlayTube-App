@@ -11,6 +11,7 @@ import useUpdateAvatar from "../customHooks/useUpdateAvatar";
 import useUpdateCoverImage from "../customHooks/useUpdateCoverImage";
 import { IoHourglassOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
+import useLogoutUser from "../customHooks/useLogoutUser";
 
 interface ChannelDetail {
   avatar: {
@@ -49,6 +50,7 @@ const ChannelHeader: React.FC<UserDetails> = ({
     useUpdateAvatar();
   const { mutateAsync: updateCoverImage, isPending: uploadingCoverImage } =
     useUpdateCoverImage();
+  const { mutateAsync: logoutUser, isPending } = useLogoutUser();
   const { userId, username: channelUsername } = useParams<{
     userId: string;
     username: string;
@@ -135,6 +137,10 @@ const ChannelHeader: React.FC<UserDetails> = ({
     }
   }
 
+  async function handleLogout() {
+    await logoutUser();
+  }
+
   return (
     <div className="w-full h-auto  ">
       <ToastContainer
@@ -209,19 +215,27 @@ const ChannelHeader: React.FC<UserDetails> = ({
         </div>
 
         {userId === loggedInUser?._id ? (
-          <button
-            onClick={toggleEdit}
-            className="button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 gap-2 self-end sm:self-auto  "
-          >
-            {isEdit ? (
-              "View Channel"
-            ) : (
-              <span className="flex  items-center gap-2">
-                <MdOutlineEdit size={20} />
-                Edit
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-5 self-end sm:self-auto">
+            <button
+              onClick={handleLogout}
+              className="button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 gap-2 self-end sm:self-auto  "
+            >
+              <span className="flex  items-center gap-2">Logout</span>
+            </button>
+            <button
+              onClick={toggleEdit}
+              className="button-animation px-3 py-2  rounded-md text-center  bg-red-700 hover:bg-red-600 transition duration-300 gap-2 self-end sm:self-auto  "
+            >
+              {isEdit ? (
+                "View Channel"
+              ) : (
+                <span className="flex  items-center gap-2">
+                  <MdOutlineEdit size={20} />
+                  Edit
+                </span>
+              )}
+            </button>
+          </div>
         ) : (
           <button
             onClick={handleSubscribe}

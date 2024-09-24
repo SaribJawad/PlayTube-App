@@ -6,7 +6,6 @@ import { MdHistoryToggleOff } from "react-icons/md";
 import { BsCameraVideo } from "react-icons/bs";
 import { GoFileDirectory } from "react-icons/go";
 import { RiUserFollowLine } from "react-icons/ri";
-import { IoSettingsOutline } from "react-icons/io5";
 import { useAppSelector } from "../app/hooks";
 
 const SideMenu: React.FC = () => {
@@ -40,13 +39,6 @@ const SideMenu: React.FC = () => {
           to={`/channelSubscribers/${loggedInUser}`}
           icon={<RiUserFollowLine size={25} />}
           label="Subscribers"
-        />
-      </ul>
-      <ul className="px-2 py-5 ">
-        <MenuItem
-          to=""
-          icon={<IoSettingsOutline size={25} />}
-          label="Settings"
         />
       </ul>
     </div>
