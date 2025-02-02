@@ -9,6 +9,7 @@ import {
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { log } from "console";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -323,46 +324,63 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     );
 });
 
-const updateUserCoverImage = asyncHandler(async (req, res) => {
-  const coverImageLocalPath = req.file?.path;
+const updateUserCoverImage = asyncHandler(async (req, res, next) => {
+  try {
+    const coverImageLocalPath = req.file?.path;
 
-  if (!coverImageLocalPath) {
-    throw new ApiError(400, "Cover image file is missing");
-  }
+    console.log("updating cover image");
 
-  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+    if (!coverImageLocalPath) {
+      throw new ApiError(400, "Cover image file is missing");
+    }
 
-  if (!coverImage.url) {
-    throw new ApiError(400, "Error while uploading on cover image");
-  }
+    console.log(coverImageLocalPath, "cover image");
 
-  // deleting previous cover
-  const user = await User.findById(req.user._id).select("coverImage");
-  const oldPublicId = user.coverImage.public_id;
-  const updatedUser = await User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      $set: {
-        coverImage: {
-          url: coverImage.url,
-          public_id: coverImage.public_id,
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+    if (!coverImage.url) {
+      throw new ApiError(400, "Error while uploading cover image");
+    }
+
+    console.log("uploaded cover image");
+
+    // Fetching user and deleting previous cover image from cloud if it exists
+    const user = await User.findById(req.user._id).select("coverImage");
+    const oldPublicId = user.coverImage.public_id;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user?._id,
+      {
+        $set: {
+          coverImage: {
+            url: coverImage.url,
+            public_id: coverImage.public_id,
+          },
         },
       },
-    },
-    {
-      new: true,
+      { new: true }
+    ).select("-password");
+
+    // Delete old cover image from Cloudinary if it exists
+    if (oldPublicId && updatedUser.coverImage) {
+      await deleteFromCloudinary(oldPublicId);
     }
-  ).select("-password");
 
-  if (oldPublicId && updatedUser.coverImage) {
-    deleteFromCloudinary(oldPublicId);
+    console.log("updated cover");
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          "User cover image updated successfully",
+          updatedUser
+        )
+      );
+  } catch (error) {
+    console.error("Error in updating cover image:", error);
+    next(error); // Passing the error to the global error handler
   }
-
-  res
-    .status(200)
-    .json(
-      new ApiResponse(200, "User cover image updated successfully", updatedUser)
-    );
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {

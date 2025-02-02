@@ -21,14 +21,4 @@ connectDB()
     console.log("MONGODB connection failed !!! ", error);
   });
 
-// connectDB().catch((error) => {
-//   console.log("MONGODB connection failed !!! ", error);
-// });
-
-// Error-handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-});
-
 export const handler = serverless(app);

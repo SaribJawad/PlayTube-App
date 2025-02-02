@@ -1,6 +1,5 @@
 import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
-import { ApiError } from "./ApiError.js";
 
 const uploadOnCloudinary = async (localFilePath) => {
   cloudinary.config({
@@ -11,15 +10,14 @@ const uploadOnCloudinary = async (localFilePath) => {
 
   try {
     if (!localFilePath) return null;
-    //upload the file on cloudinary
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
-    // file has been uploaded successfully
+
     fs.unlinkSync(localFilePath);
     return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath); // - remove the locally saved temporary file as the upload operation got failed
+    fs.unlinkSync(localFilePath);
     return null;
   }
 };
@@ -33,7 +31,6 @@ const deleteFromCloudinary = async (publicId, resource_type = "image") => {
     });
   } catch (error) {
     return error;
-    console.log("Error while deleting file on cloudinary", error);
   }
 };
 

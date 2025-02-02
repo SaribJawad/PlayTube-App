@@ -3,8 +3,11 @@ service: playtube-api
 provider:
   name: aws
   runtime: nodejs20.x
-  region: ap-south-1
   stage: dev
+  region: ap-south-1
+  apiGateway:
+    binaryMediaTypes:
+      - "*/*"
   environment:
     PORT: ${env:PORT}
     CORS_ORIGIN: ${env:CORS_ORIGIN}
@@ -22,9 +25,20 @@ functions:
   api:
     handler: src/index.handler
     events:
-      - httpApi:
+      - http:
           path: /{proxy+}
           method: ANY
+          cors:
+            origin: ""
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Amz-Date
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Requested-With
+            allowCredentials: true
+            maxAge: 86400
 
 plugins:
   - serverless-dotenv-plugin

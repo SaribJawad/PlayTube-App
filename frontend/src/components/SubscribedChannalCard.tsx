@@ -51,10 +51,6 @@ const SubscribedChannalCard: React.FC<SubscribedChannelCardProps> = ({
     );
   }
 
-  console.log(
-    `/profile/${subscribedChannel?._id}/{${subscribedChannel?.username}`
-  );
-
   return (
     <div className="p-2 w-full h-[100px] border-b  border-zinc-800 flex items-center justify-between">
       <div className="flex items-center gap-2">

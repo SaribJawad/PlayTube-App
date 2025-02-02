@@ -18,6 +18,8 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 // setting for handling json
@@ -26,6 +28,7 @@ app.use(
     limit: "16kb",
   })
 );
+
 //setting for URLS
 app.use(
   express.urlencoded({
@@ -33,8 +36,8 @@ app.use(
     limit: "16kb",
   })
 );
+
 app.use(express.static("public"));
-//config cookie-parse
 app.use(cookieParser());
 
 //routes declaration
