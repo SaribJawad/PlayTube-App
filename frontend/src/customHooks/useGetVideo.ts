@@ -1,8 +1,4 @@
-import {
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import {

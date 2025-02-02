@@ -45,7 +45,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
     owner: {
       avatar: { url: avatarUrl },
       fullname,
-      username,
+
       _id: ownerId,
     },
     likes,

@@ -3,7 +3,6 @@ import {
   useQueryClient,
   UseMutationResult,
 } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 
 interface Video {
   _id: string;

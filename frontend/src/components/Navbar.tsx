@@ -3,7 +3,7 @@ import { IoIosSearch } from "react-icons/io";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Slider from "./Slider";
 import { Link, useNavigate } from "react-router-dom";
-import useGetSearchVideos from "../customHooks/useGetSearchVideos";
+// import useGetSearchVideos from "../customHooks/useGetSearchVideos";
 import { useAppSelector } from "../app/hooks";
 
 const Navbar: React.FC = () => {
@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const loggedInUser = useAppSelector((state) => state?.auth?.user);
-  const { refetch } = useGetSearchVideos();
+  // const { refetch } = useGetSearchVideos();
   const navigate = useNavigate();
 
   function toggleMenu(): void {

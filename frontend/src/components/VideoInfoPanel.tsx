@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { BiLike } from "react-icons/bi";
-import { IoPersonAddOutline } from "react-icons/io5";
 import { BiSolidLike } from "react-icons/bi";
 
 import { VscFileSymlinkDirectory } from "react-icons/vsc";

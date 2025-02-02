@@ -53,7 +53,6 @@ const HorizontalVideoCard: React.FC<VideoThumbnailCard> = ({
     duration,
     createdAt,
     owner: {
-      _id: videoOwnerId,
       username,
       avatar: { url: avatarUrl },
     },

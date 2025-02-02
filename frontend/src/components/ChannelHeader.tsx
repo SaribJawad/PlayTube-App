@@ -50,13 +50,16 @@ const ChannelHeader: React.FC<UserDetails> = ({
     useUpdateAvatar();
   const { mutateAsync: updateCoverImage, isPending: uploadingCoverImage } =
     useUpdateCoverImage();
-  const { mutateAsync: logoutUser, isPending } = useLogoutUser();
+  const { mutateAsync: logoutUser } = useLogoutUser();
   const { userId, username: channelUsername } = useParams<{
     userId: string;
     username: string;
   }>();
   const loggedInUser = useAppSelector((state) => state.auth.user);
+
+  // @ts-ignore
   const [coverImage, setCoverImage] = useState<File>();
+  // @ts-ignore
   const [avatar, setAvatar] = useState<File>();
 
   async function handleSubscribe() {

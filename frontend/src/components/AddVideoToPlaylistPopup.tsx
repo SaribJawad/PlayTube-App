@@ -3,7 +3,6 @@ import { IoClose } from "react-icons/io5";
 import { useAppSelector } from "../app/hooks";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import useGetUsersPlaylist from "../customHooks/useGetUsersPlaylist";
 
 interface Playlist {
   _id: string;

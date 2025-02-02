@@ -6,7 +6,7 @@ import useGetChannelSubscribers from "../customHooks/useGetChannelSubscribers";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const ChannelSubscribersPage: React.FC = () => {
-  const { isLoading, error } = useGetChannelSubscribers();
+  const { isLoading } = useGetChannelSubscribers();
   const subscribers = useAppSelector(
     (state) => state.channels.channelSubscribers
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { IoCloseOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoCloseOutline } from "react-icons/io5";
 import SliderItem from "./SliderItem";
 import { BiLike } from "react-icons/bi";
 import { BsCameraVideo } from "react-icons/bs";
