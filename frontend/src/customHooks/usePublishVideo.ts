@@ -50,6 +50,7 @@ const usePublishVideo = (): UseMutationResult<
   ErrorReponse,
   PublishData
 > => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const queryClient = useQueryClient();
 
   return useMutation<PublishVideoResponse, ErrorReponse, PublishData>({
@@ -66,7 +67,7 @@ const usePublishVideo = (): UseMutationResult<
       formData.append("description", description);
 
       try {
-        const response = await fetch("/api/v1/videos", {
+        const response = await fetch(`${apiBaseUrl}/api/v1/videos`, {
           method: "POST",
           body: formData,
           credentials: "include",

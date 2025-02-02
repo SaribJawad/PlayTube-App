@@ -5,6 +5,8 @@ interface ErrorResponse {
 }
 
 const useUpdateCoverImage = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<void, ErrorResponse, File>({
     mutationFn: async (coverImage) => {
       const formData = new FormData();
@@ -12,7 +14,7 @@ const useUpdateCoverImage = () => {
         formData.append("coverImage", coverImage);
       }
 
-      const response = await fetch("/api/v1/users/cover-image", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/users/cover-image`, {
         method: "PATCH",
         body: formData,
         credentials: "include",

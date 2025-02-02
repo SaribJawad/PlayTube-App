@@ -6,10 +6,12 @@ interface ErrorResponse {
 }
 
 const useDeleteVideo = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const queryClient = useQueryClient();
+
   return useMutation<void, ErrorResponse, string>({
     mutationFn: async (videoId) => {
-      const response = await fetch(`/api/v1/videos/${videoId}`, {
+      const response = await fetch(`${apiBaseUrl}/api/v1/videos/${videoId}`, {
         method: "DELETE",
         credentials: "include",
       });

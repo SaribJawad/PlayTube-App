@@ -35,6 +35,7 @@ interface ErrorResponse {
 }
 
 const useGetUsersTweets = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const { userId } = useParams<{ userId: string }>();
   const dispatch = useAppDispatch();
 
@@ -43,10 +44,13 @@ const useGetUsersTweets = () => {
     queryFn: async () => {
       try {
         dispatch(tweetRequest());
-        const response = await fetch(`/api/v1/tweets/user/${userId}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${apiBaseUrl}/api/v1/tweets/user/${userId}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           const error: ErrorResponse = await response.json();

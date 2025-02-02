@@ -27,15 +27,20 @@ interface UpdateCommentArgs {
 }
 
 const useUpdateComment = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<UpdateCommentResponse, ErrorResponse, UpdateCommentArgs>({
     mutationFn: async ({ content, commentId }) => {
-      const response = await fetch(`/api/v1/comments/c/${commentId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content }),
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/comments/c/${commentId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content }),
+        }
+      );
 
       if (!response.ok) {
         const error: ErrorResponse = await response.json();

@@ -26,13 +26,14 @@ interface ErrorResposnse {
 }
 
 const useGetChannelStats = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
 
   return useQuery<GetChannelStatsResponse, ErrorResposnse>({
     queryKey: ["channelStats"],
     queryFn: async () => {
       dispatch(channelRequest());
-      const response = await fetch("/api/v1/dashboard/stats", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/dashboard/stats`, {
         method: "GET",
         credentials: "include",
       });

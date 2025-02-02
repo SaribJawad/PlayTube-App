@@ -10,9 +10,11 @@ interface FormValues {
 }
 
 const useCreatePlaylist = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<void, ErrorResponse, FormValues>({
     mutationFn: async ({ name, description }) => {
-      const response = await fetch("/api/v1/playlist", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/playlist`, {
         method: "POST",
 
         credentials: "include",

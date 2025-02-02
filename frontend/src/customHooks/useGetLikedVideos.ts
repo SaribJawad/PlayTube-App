@@ -45,13 +45,14 @@ interface ErrorResponse {
 }
 
 const useGetLikedVideos = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
   return useQuery<GetLikedVideosResponse, ErrorResponse>({
     queryKey: ["likedVideos"],
     queryFn: async () => {
       try {
         dispatch(videoRequest());
-        const response = await fetch("/api/v1/likes/videos", {
+        const response = await fetch(`${apiBaseUrl}/api/v1/likes/videos`, {
           method: "GET",
           credentials: "include",
         });

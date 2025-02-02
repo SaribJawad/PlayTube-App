@@ -42,6 +42,7 @@ interface ErrorResponse {
 }
 
 const useLogin = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
 
   return useMutation<LoginResponse, ErrorResponse, LoginData>({
@@ -49,7 +50,7 @@ const useLogin = () => {
       try {
         dispatch(loginRequest());
 
-        const response = await fetch("/api/v1/users/login", {
+        const response = await fetch(`${apiBaseUrl}/api/v1/users/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

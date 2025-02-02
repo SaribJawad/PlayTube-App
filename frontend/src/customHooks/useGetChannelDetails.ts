@@ -33,13 +33,16 @@ interface ErrorResponse {
 }
 
 const useGetChannelDetails = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const { username } = useParams<{ username: string }>();
 
   return useQuery<ChannelDetailsResponse, ErrorResponse>({
     queryKey: ["channelDetails", username],
     queryFn: async () => {
       try {
-        const response = await fetch(`/api/v1/users/c/${username}`);
+        const response = await fetch(
+          `${apiBaseUrl}/api/v1/users/c/${username}`
+        );
         if (!response.ok) {
           const error: ErrorResponse = await response.json();
           throw new Error(error.message);

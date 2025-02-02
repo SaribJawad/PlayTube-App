@@ -21,12 +21,17 @@ interface ErrorResponse {
 }
 
 function useLikeToggleComment() {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<LikeToggelCommentResponse, ErrorResponse, string>({
     mutationFn: async (commentId) => {
-      const response = await fetch(`/api/v1/likes/toggle/c/${commentId}`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/likes/toggle/c/${commentId}`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         throw new Error(error.message);

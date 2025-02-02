@@ -5,12 +5,17 @@ interface ErrorResponse {
 }
 
 const useDeletePlaylist = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<void, ErrorResponse, string>({
     mutationFn: async (playlistId) => {
-      const response = await fetch(`/api/v1/playlist/${playlistId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/playlist/${playlistId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         throw new Error(error.message);

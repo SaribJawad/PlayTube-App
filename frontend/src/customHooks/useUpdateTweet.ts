@@ -26,9 +26,11 @@ interface UpdateTweetArgs {
 }
 
 function useUpdateTweet() {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<UpdateTweetResponse, ErrorResponse, UpdateTweetArgs>({
     mutationFn: async ({ tweetContent, tweetId }) => {
-      const response = await fetch(`/api/v1/tweets/${tweetId}`, {
+      const response = await fetch(`${apiBaseUrl}/api/v1/tweets/${tweetId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

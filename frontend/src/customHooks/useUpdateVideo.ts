@@ -15,6 +15,7 @@ interface UpdateVideoArg {
 }
 
 const useUpdateVideo = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const queryClient = useQueryClient();
   return useMutation<void, ErrorResponse, UpdateVideoArg>({
     mutationFn: async ({ updatedData, videoId }) => {
@@ -25,7 +26,7 @@ const useUpdateVideo = () => {
       if (updatedData.thumbnail)
         formData.append("thumbnail", updatedData.thumbnail);
 
-      const response = await fetch(`/api/v1/videos/${videoId}`, {
+      const response = await fetch(`${apiBaseUrl}/api/v1/videos/${videoId}`, {
         method: "PATCH",
         body: formData,
         credentials: "include",

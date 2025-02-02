@@ -40,6 +40,7 @@ interface ErrorResponse {
 }
 
 const useGetUsersPlaylist = (passedUserId?: string) => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
   const { userId: paramUserId } = useParams<{ userId: string }>();
 
@@ -54,10 +55,13 @@ const useGetUsersPlaylist = (passedUserId?: string) => {
 
       dispatch(playlistRequest());
 
-      const response = await fetch(`/api/v1/playlist/user/${userId}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/playlist/user/${userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         dispatch(playlistFailure(error.message));

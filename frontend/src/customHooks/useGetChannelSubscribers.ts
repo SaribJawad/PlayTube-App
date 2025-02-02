@@ -32,6 +32,7 @@ interface ErrorResponse {
 }
 
 function useGetChannelSubscribers(passedChannelId?: string) {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const { channelId: paramChannelId } = useParams<{ channelId: string }>();
   const channelId = paramChannelId || passedChannelId;
   const dispatch = useAppDispatch();
@@ -40,10 +41,13 @@ function useGetChannelSubscribers(passedChannelId?: string) {
     queryKey: ["channelSubscribers", channelId],
     queryFn: async () => {
       dispatch(channelRequest());
-      const response = await fetch(`/api/v1/subscription/c/${channelId}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/subscription/c/${channelId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         const error: ErrorResponse = await response.json();

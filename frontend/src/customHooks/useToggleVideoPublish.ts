@@ -6,13 +6,17 @@ interface ErrorResponse {
 
 const useToggleVideoPublish = () => {
   const queryClient = useQueryClient();
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
 
   return useMutation<void, ErrorResponse, string>({
     mutationFn: async (videoId) => {
-      const response = await fetch(`/api/v1/videos/toggle/publish/${videoId}`, {
-        method: "PATCH",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/videos/toggle/publish/${videoId}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         throw new Error(error.message);

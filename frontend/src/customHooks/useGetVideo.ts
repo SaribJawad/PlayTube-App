@@ -52,6 +52,7 @@ interface ErrorResponse {
 }
 
 const useGetVideo = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
   const { videoId } = useParams<{ videoId: string }>();
   const queryClient = useQueryClient();
@@ -61,7 +62,7 @@ const useGetVideo = () => {
     queryFn: async () => {
       try {
         dispatch(videoRequest());
-        const response = await fetch(`/api/v1/videos/${videoId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/v1/videos/${videoId}`, {
           method: "GET",
           credentials: "include",
         });

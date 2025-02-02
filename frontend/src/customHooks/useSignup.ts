@@ -47,6 +47,7 @@ interface SignupData {
 
 const useSignup = () => {
   const dispatch = useAppDispatch();
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
 
   return useMutation<SignupResponse, ErrorResponse, SignupData>({
     mutationFn: async ({
@@ -66,7 +67,7 @@ const useSignup = () => {
         formData.append("fullname", fullname);
         formData.append("avatar", avatar[0]);
 
-        const response = await fetch("/api/v1/users/register", {
+        const response = await fetch(`${apiBaseUrl}/api/v1/users/register`, {
           method: "POST",
           body: formData,
         });

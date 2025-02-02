@@ -12,12 +12,13 @@ interface checkAuthStatusResponse {
 }
 
 const useCheckAuthStatus = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
 
   return useQuery<checkAuthStatusResponse>({
     queryKey: ["authStatus"],
     queryFn: async () => {
-      const response = await fetch("/api/v1/users/check-auth", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/users/check-auth`, {
         method: "GET",
         credentials: "include",
       });

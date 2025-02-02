@@ -10,10 +10,11 @@ interface RemoveVideoFromPlaylistArg {
 }
 
 const useRemoveVideoFromPlaylist = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   return useMutation<void, ErrorResponse, RemoveVideoFromPlaylistArg>({
     mutationFn: async ({ playlistId, videoId }) => {
       const response = await fetch(
-        `/api/v1/playlist/remove/${videoId}/${playlistId}`,
+        `${apiBaseUrl}/api/v1/playlist/remove/${videoId}/${playlistId}`,
         {
           method: "PATCH",
           credentials: "include",

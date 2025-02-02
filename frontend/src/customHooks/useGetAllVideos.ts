@@ -53,6 +53,7 @@ interface FetchVideosParams {
 const useGetAllVideos = (
   params: FetchVideosParams
 ): { invalidateVideos: () => void } => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   const queryResult = useQuery<VideoResponse, ErrorResponse>({
@@ -61,10 +62,13 @@ const useGetAllVideos = (
       try {
         dispatch(videoRequest());
         const urlParams = new URLSearchParams(params as any);
-        const response = await fetch(`/api/v1/videos?${urlParams.toString()}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${apiBaseUrl}/api/v1/videos?${urlParams.toString()}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (!response.ok) {
           const error: ErrorResponse = await response.json();
           dispatch(videoFailure(error.message));

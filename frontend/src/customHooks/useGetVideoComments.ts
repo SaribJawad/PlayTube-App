@@ -35,6 +35,7 @@ interface ErrorResponse {
 }
 
 const useGetVideoComments = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
   const { videoId } = useParams<{ videoId: string }>();
   const queryClient = useQueryClient();
@@ -44,10 +45,13 @@ const useGetVideoComments = () => {
     queryFn: async () => {
       try {
         dispatch(commentRequest());
-        const response = await fetch(`/api/v1/comments/${videoId}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${apiBaseUrl}/api/v1/comments/${videoId}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           const error: ErrorResponse = await response.json();

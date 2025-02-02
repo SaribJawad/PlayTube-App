@@ -56,6 +56,7 @@ interface ErrorResponse {
 }
 
 const useGetPlaylistDetail = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const { playlistId } = useParams<{ playlistId: string }>();
   const dispatch = useAppDispatch();
 
@@ -63,10 +64,13 @@ const useGetPlaylistDetail = () => {
     queryKey: ["playlistDetail"],
     queryFn: async () => {
       dispatch(playlistRequest());
-      const response = await fetch(`/api/v1/playlist/${playlistId}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/playlist/${playlistId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         dispatch(playlistFailure(error.message));

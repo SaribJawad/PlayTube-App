@@ -22,15 +22,19 @@ interface ErrorResponse {
 }
 
 const useLikeToggleVideo = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const { videoId } = useParams<{ videoId: string }>();
   const queryClient = useQueryClient();
 
   return useMutation<LikeToggleVideoResponse, ErrorResponse>({
     mutationFn: async () => {
-      const response = await fetch(`/api/v1/likes/toggle/v/${videoId}`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/likes/toggle/v/${videoId}`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       const contentType = response.headers.get("Content-Type");
       if (contentType && contentType.includes("application/json")) {
         const data: LikeToggleVideoResponse = await response.json();

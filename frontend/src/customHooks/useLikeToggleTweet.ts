@@ -21,12 +21,17 @@ interface ErrorResponse {
 }
 
 function useLikeToggleTweet() {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<LikeToggleTweetResponse, ErrorResponse, string>({
     mutationFn: async (tweetId) => {
-      const response = await fetch(`/api/v1/likes/toggle/t/${tweetId}`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/likes/toggle/t/${tweetId}`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       const contentType = response.headers.get("Content-Type");
       if (contentType && contentType.includes("application/json")) {
         const data: LikeToggleTweetResponse = await response.json();

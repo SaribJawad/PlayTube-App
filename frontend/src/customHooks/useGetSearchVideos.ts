@@ -43,6 +43,7 @@ interface ErrorResponse {
 }
 // shouldFetch: boolean
 const useGetSearchVideos = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
   const { query } = useParams<{ query: string }>();
 
@@ -50,7 +51,7 @@ const useGetSearchVideos = () => {
     try {
       dispatch(videoRequest());
       const response = await fetch(
-        `/api/v1/videos?page=1&limit=10&sortBy=createdAt&sortType=desc&query=${query}`,
+        `${apiBaseUrl}/api/v1/videos?page=1&limit=10&sortBy=createdAt&sortType=desc&query=${query}`,
         {
           method: "GET",
           credentials: "include",

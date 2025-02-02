@@ -36,13 +36,14 @@ interface ErrorResponse {
 }
 
 const useGetWatchedHistory = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
 
   return useQuery<GetWatchedHistoryResponse, ErrorResponse>({
     queryKey: ["watchedHistory"],
     queryFn: async () => {
       dispatch(watchedHistoryRequest());
-      const response = await fetch("/api/v1/users/watch-history");
+      const response = await fetch(`${apiBaseUrl}/api/v1/users/watch-history`);
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         dispatch(watchedHistoryFailure(error.message));

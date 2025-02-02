@@ -28,13 +28,14 @@ interface Content {
 }
 
 const useCreateTweet = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const { userId } = useParams<{ userId: string }>();
   const queryClient = useQueryClient();
 
   return useMutation<CreateTweetResponse, ErrorResponse, Content>({
     mutationFn: async ({ tweetContent }) => {
       try {
-        const response = await fetch("/api/v1/tweets", {
+        const response = await fetch(`${apiBaseUrl}/api/v1/tweets`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

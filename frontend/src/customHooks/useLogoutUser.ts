@@ -19,13 +19,14 @@ interface LogoutUserResponse {
 }
 
 const useLogoutUser = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   return useMutation<LogoutUserResponse, ErrorResponse>({
     mutationFn: async () => {
       dispatch(logoutRequest());
 
-      const response = await fetch("/api/v1/users/logout", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/users/logout`, {
         method: "POST",
         credentials: "include",
       });

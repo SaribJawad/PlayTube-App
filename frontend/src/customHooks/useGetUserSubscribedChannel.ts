@@ -33,6 +33,7 @@ interface ErrorResponse {
 }
 
 function useGetUserSubscribedChannel() {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const { userId } = useParams<{ userId: string }>();
   const dispatch = useAppDispatch();
 
@@ -40,7 +41,9 @@ function useGetUserSubscribedChannel() {
     queryKey: ["subscribedChannel", userId],
     queryFn: async () => {
       dispatch(channelRequest());
-      const response = await fetch(`/api/v1/subscription/u/${userId}`);
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/subscription/u/${userId}`
+      );
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         dispatch(channelFailure(error.message));

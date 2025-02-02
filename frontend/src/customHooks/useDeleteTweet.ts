@@ -21,9 +21,11 @@ interface ErrorResponse {
 }
 
 const useDeleteTweet = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<DeleteTweetResponse, ErrorResponse, string>({
     mutationFn: async (tweetId) => {
-      const response = await fetch(`/api/v1/tweets/${tweetId}`, {
+      const response = await fetch(`${apiBaseUrl}/api/v1/tweets/${tweetId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

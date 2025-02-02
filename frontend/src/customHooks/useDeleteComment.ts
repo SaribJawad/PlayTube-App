@@ -12,15 +12,20 @@ interface ErrorResponse {
 }
 
 const useDeleteComment = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+
   return useMutation<DeleteCommentResponse, ErrorResponse, string>({
     mutationFn: async (commentId) => {
-      const response = await fetch(`/api/v1/comments/c/${commentId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/v1/comments/c/${commentId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         const error: ErrorResponse = await response.json();
         throw new Error(error.message);

@@ -30,13 +30,14 @@ interface ErrorResponse {
 }
 
 function useGetMyContentChannelVideos() {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
   const dispatch = useAppDispatch();
 
   return useQuery<GetMyContentChannelVideosResponse, ErrorResponse>({
     queryKey: ["ContentChannelVideos"],
     queryFn: async () => {
       dispatch(channelRequest());
-      const response = await fetch("/api/v1/dashboard/videos", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/dashboard/videos`, {
         method: "GET",
         credentials: "include",
       });

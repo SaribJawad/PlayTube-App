@@ -29,7 +29,7 @@ functions:
           path: /{proxy+}
           method: ANY
           cors:
-            origin: ""
+            origin: "https://play-tube-app.vercel.app"
             headers:
               - Content-Type
               - Authorization
