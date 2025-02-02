@@ -43,6 +43,7 @@ interface ErrorResponse {
 
 const useLogin = () => {
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+  console.log(apiBaseUrl);
   const dispatch = useAppDispatch();
 
   return useMutation<LoginResponse, ErrorResponse, LoginData>({
